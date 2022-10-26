@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <div class="addQuestionContainer" style="width: 45vw; height: 45vh; border: 1px solid;">
+        <form action="/api/questions" method="post" encType="multipart/form-data" ref="uploadForm">
+            <h1>Dodaj Pytanie</h1>
+            <label for="content">Treść pytania</label>
+            <textarea name="content" id="content" placeholder="Podaj treść pytania" required></textarea>
+            <label for="answers">Odpowiedzi</label>
+            <fieldset id="questions">
+                <input type="text" name="answerA" placeholder="odpowiedź a">
+                <input type="text" name="answerB" placeholder="odpowiedź b">
+                <input type="text" name="answerC" placeholder="odpowiedź c">
+                <input type="text" name="answerD" placeholder="odpowiedź d">
+            </fieldset>
+        <input type="file" name="image" id="image" accept="image/png, image/jpeg" >
+        <label for="correct" ></label>
+        <input type="text" name="correct" id="correct" required maxlength="1">
+        <textarea name="tags" id="" placeholder="Dodaj słowa kluczowe/tagi. Oddziel je przecinkiem."></textarea>
+        <button type="button">Anuluj</button>
+        <input type="submit">
+    </form>
+    </div>
+    <div class="createExamContainer" style="width: 45vw; height: 45vh; border: 1px solid;">
+
+    </div>
+    <div class="createGroupContainer" style="width: 45vw; height: 45vh; border: 1px solid;">
+
+    </div>
+    <div class="addExamToGroupContainer" style="width: 45vw; height: 45vh; border: 1px solid;">
+
+    </div>
+
+</body>
+</html>

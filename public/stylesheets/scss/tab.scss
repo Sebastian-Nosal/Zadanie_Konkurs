@@ -1,0 +1,53 @@
+@import './mixins.scss';
+@media only screen and (max-width: 1023px) {
+    .questions-container
+    {
+        margin-top: 15px;
+        @include glassmorp();
+        width: 96vw;
+        border-radius: 15px;
+        @include center();
+        display: block;
+        height: 130px;
+        padding: 0;
+
+        .question
+        {
+            max-width: 96vw;
+            overflow-x: auto;
+            box-sizing: border-box;
+            padding: 10px;
+            position: relative;
+            height: fit-content;
+            white-space: nowrap;
+            ul
+            {
+                list-style-type: none;
+                padding: 0px;
+                white-space: nowrap;
+                li
+                {
+                    @include glassmorp();
+                    text-align: center;
+                    display: inline-block;
+                    writing-mode:vertical-lr;
+                    padding: 5px;
+                    margin-left: 2px;
+                    margin-right: 2px;
+                    border-radius: 5px;
+                    height: 70px;
+
+                }
+            }
+        }
+    }
+
+    @media  screen and (min-width: 769px) {
+        .App
+        {
+            width: 80vw !important;
+            margin-top: 90px !important;
+            padding: 90px !important;
+        }
+    }
+}

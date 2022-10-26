@@ -1,0 +1,180 @@
+@import './mixins.scss';
+
+@media only screen and (min-width: 1024px) {
+    
+
+    body
+    {
+        overflow: hidden;
+    }
+    header
+    {
+        height: 75px;
+
+        button
+        {
+            display: block;
+        }
+    
+    
+    nav
+    {
+        @include center();
+        width: 780px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        max-height: 74px;
+    
+        button
+        {
+            border: 0px;
+            border-bottom: 5px white solid;
+            width: 250px;
+            padding-top:25px;
+            font-size: 20px;
+            padding-bottom: 20px;
+            background-color: white;
+            box-sizing: border-box;
+            max-height: 74px;
+            font-weight: bold;
+        }
+        button:hover
+        {
+            border-bottom: 5px orange solid;
+            font-size: 23px;
+            font-weight: bold;
+            color: orange;
+            padding-top: 20px;
+            transition: font-size 1s, border-bottom 1s;
+        }
+    
+        .selected
+        {
+            border-bottom: 5px orange solid;
+            font-size: 24px;
+            color: orange;
+        }
+    }
+}
+    .container
+    {
+        display: flex;
+        
+        .questions-container
+        {
+            margin: 30px 20px;
+            @include glassmorp();
+            height: calc(80vh - 40px);
+            max-width: 250px;
+            min-width: 100px;
+            width: 15vw;
+            padding: 10px;
+            border-radius: 15px;
+            float: left;
+        
+            .question
+            {
+                max-height: calc(80vh - 20px - 40px);
+                overflow-y: auto;
+                -webkit-overflow: visible;
+                scrollbar-color: lightgray rgba(#FFF, 0.4);
+                scrollbar-width: thin;
+            }
+
+            ul
+            {
+                list-style-type: none;
+                padding: 0;
+                margin: 0;
+            }
+            
+            li
+            {
+                background-color: rgba(#FFF, 0.4);
+                border-radius: 10px;
+                padding: 8px;
+                margin: 5px;
+                cursor: pointer;
+                
+            }    
+        }
+        
+        .App-container
+        {
+            max-width: calc(100vw - 2* 300px);
+        
+            .App
+            {
+                width: 780px;
+                margin-top: 70px;
+                padding: 70px;
+                min-height: 60vh;
+                font-size: 24px;
+            
+                .App__Content__Center
+                {
+                @include centerVerticaly();
+                
+                    h1
+                    {
+                        text-align: center;
+                        margin-top: 0px;
+                    }
+                    img
+                    {
+                        height: 33%;
+                        width: 100%;
+                        display: none;
+                    }
+                }
+        
+                .App__Button-Container
+                {
+                    width: 60%;
+                    margin-top: 50px;
+        
+                    .App__Button
+                    {
+                        width: 70px;
+                        height: 70px;
+                        padding: 10px;
+                        border-radius: 35px ;
+                        font-size: 25px;
+                    }
+        
+                    .App__Button:hover
+                    {
+                        font-size: 33px;
+                    }
+                }
+        
+            }
+        
+            .App__Controls
+            {
+                width: 100%;
+                display: flex;
+                @include center();
+                z-index: 2;
+                margin-top: 50px;
+                justify-content: space-between;
+        
+                button
+                {
+                    width: 60px;
+                    height: 60px;
+                    font-size: 25px;
+                }
+        
+                button:hover
+                {
+                    box-shadow: 0px 0px 20px 8px #00FFaa;
+                    text-shadow: 2px -1px 10px #0F0;
+                    transition: box-shadow 1s;
+                }
+            
+            }
+        }
+    }
+}

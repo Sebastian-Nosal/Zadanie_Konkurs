@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/stylesheets/style.css">
+    <link rel="stylesheet" href="/static/stylesheets/forms.css">
+    <title>Strona Główna</title>
+</head>
+<body>
+    <div class="container">
+        <div class="App-container">
+            <main>
+                <div class="App">
+                    <div class="App__Content__Center">
+                        <form action="/register" method="post">
+                            <h1>Rejestracja</h1>
+                            <fieldset>
+                                <label for="username">Adres E-mail</label>
+                                <input type="email" name="username" id="username" required>
+                                <label for="password">Hasło</label>
+                                <input type="password" name="password" id="password" required>
+                                <select name="type" required>
+                                    <option value="student">Jestem Uczniem</option>
+                                    <option value="teacher">Jestem Nauczycielem</option>
+                                </select>
+                                <label class="checkbox-label"><input type="checkbox"  id="accetpRules" value="RegulaminOk"> Oświadczam, że zapoznałem się z regulaminem serwisu. *</label>
+                                <label class="checkbox-label"><input type="checkbox"  id="acceptPrivacy" value="PrywatnośćOK"> Oświadczam, że zapoznałem się polityką prywatności i wyrażam zgodę na przetwarzanie moich danych osobowych. *</label>
+                                <div class="from__button-container">
+                                    <button type="button"><a href="/login">Logowanie</a></button>
+                                    <input type="submit" value="Zarejestruj">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <a href="">API</a>
+        <a href="">Dokumentacja</a>
+        <span> 	&copy; Sebastian Nosal 2022</span>
+        <a href="">Źródła</a>
+        <a href="">Regulamin</a>
+    </footer>
+</body>
+</html>

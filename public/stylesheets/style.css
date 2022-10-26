@@ -1,0 +1,354 @@
+body {
+  background-image: url("/static/images/background.jpg");
+  background-size: 100vw 100vh;
+  margin: 0;
+  padding: 0;
+}
+
+header {
+  background-color: white;
+  box-shadow: 0px 0px 30px 0px black;
+  border-bottom: 1px solid black;
+  display: flex;
+  position: sticky;
+  top: 0px;
+  z-index: 2;
+  height: 30px;
+  max-width: 100vw;
+  box-sizing: border-box;
+}
+header nav {
+  display: none;
+}
+header nav button {
+  display: block;
+}
+
+aside {
+  display: none;
+}
+
+.container {
+  width: 100vw;
+  box-sizing: border-box;
+}
+.container .App-container {
+  width: 100vw;
+  margin-bottom: 70px;
+}
+.container .App-container .App {
+  width: 96vw;
+  min-height: 60vh;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: auto;
+  margin-bottom: auto;
+  margin-top: 30px;
+  box-sizing: border-box;
+  padding: 10px 20px;
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  border-radius: 15px;
+  backdrop-filter: blur(4px);
+  background-color: rgba(255, 255, 255, 0.2);
+  font-size: 15px;
+  font-family: "Lucida Sans", "Lucida Sans Regular", "Lucida Grande", "Lucida Sans Unicode", Geneva, Verdana, sans-serif;
+  text-align: justify;
+  display: flex;
+  flex-direction: column;
+  justify-content: stretch;
+}
+.container .App-container .App .App__Content__Center {
+  margin-top: auto;
+  margin-bottom: auto;
+}
+.container .App-container .App .App__Content__Center h1 {
+  text-align: center;
+}
+.container .App-container .App .App__Content__Center img {
+  height: 33%;
+  width: 100%;
+  display: none;
+}
+.container .App-container .App .App__Button-Container {
+  display: flex;
+  width: 80%;
+  justify-content: space-between;
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 40px;
+}
+.container .App-container .App .App__Button-Container .App__Button {
+  width: 40px;
+  height: 40px;
+  box-sizing: border-box;
+  padding: 10px;
+  border-radius: 20px;
+  background-color: rgba(48, 48, 48, 0.4);
+  color: white;
+  font-size: 18px;
+  font-weight: bolder;
+  box-shadow: 0px 0px 10px 2px white;
+  border: 1px;
+  cursor: pointer;
+}
+.container .App-container .App .App__Button-Container .App__Button:hover {
+  font-size: 20px;
+}
+.container .App-container .App .App__Button-Container .App__Button:first-child:hover {
+  color: #44aaFF;
+  text-shadow: 0px 0px 2px #44aaff;
+  box-shadow: 0px 0px 10px 5px #44aaff;
+  transition: text-shadow 0.7s, box-shadow 0.7s;
+}
+.container .App-container .App .App__Button-Container .App__Button:nth-child(2):hover {
+  color: #FFFF00;
+  text-shadow: 0px 0px 2px #FFFF00;
+  box-shadow: 0px 0px 10px 5px #FFFF00;
+  transition: text-shadow 0.7s, box-shadow 0.7s;
+}
+.container .App-container .App .App__Button-Container .App__Button:nth-child(3):hover {
+  color: #FF00FF;
+  text-shadow: 0px 0px 2px #FF00FF;
+  box-shadow: 0px 0px 10px 5px #FF00FF;
+  transition: text-shadow 0.7s, box-shadow 0.7s;
+}
+.container .App-container .App .App__Button-Container .App__Button:nth-child(4):hover {
+  color: #FFAA00;
+  text-shadow: 0px 0px 2px #FFAA00;
+  box-shadow: 0px 0px 10px 5px #FFAA00;
+  transition: text-shadow 0.7s, box-shadow 0.7s;
+}
+.container .App-container .App__Controls {
+  width: 100%;
+  display: flex;
+  margin-left: auto;
+  margin-right: auto;
+  z-index: 2;
+  margin-top: auto;
+  justify-content: space-between;
+}
+.container .App-container .App__Controls button {
+  box-sizing: border-box;
+  background-color: rgba(48, 48, 48, 0.4);
+  border: 1px solid rgba(0, 255, 170, 0.4);
+  border-radius: 40px;
+  width: 40px;
+  height: 40px;
+  font-weight: bolder;
+  font-size: 18px;
+  color: #0FA;
+  text-shadow: 2px -1px 8px #0FB;
+  box-shadow: 0px 0px 15px #00FFaa;
+  cursor: pointer;
+}
+.container .App-container .App__Controls button:hover {
+  box-shadow: 0px 0px 20px 8px #00FFaa;
+  text-shadow: 2px -1px 10px #0F0;
+  transition: box-shadow 1s;
+}
+
+footer {
+  background-color: rgba(48, 48, 48, 0.8);
+  color: white;
+  width: 100%;
+  display: flex;
+  justify-content: space-evenly;
+  height: 54px;
+  align-items: center;
+  position: fixed;
+  bottom: 0px;
+  margin: 0px;
+}
+footer a {
+  text-decoration: none;
+  color: white;
+}
+
+@media only screen and (max-width: 1023px) {
+  .questions-container {
+    margin-top: 15px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    width: 96vw;
+    border-radius: 15px;
+    margin-left: auto;
+    margin-right: auto;
+    display: block;
+    height: 130px;
+    padding: 0;
+  }
+  .questions-container .question {
+    max-width: 96vw;
+    overflow-x: auto;
+    box-sizing: border-box;
+    padding: 10px;
+    position: relative;
+    height: fit-content;
+    white-space: nowrap;
+  }
+  .questions-container .question ul {
+    list-style-type: none;
+    padding: 0px;
+    white-space: nowrap;
+  }
+  .questions-container .question ul li {
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    text-align: center;
+    display: inline-block;
+    writing-mode: vertical-lr;
+    padding: 5px;
+    margin-left: 2px;
+    margin-right: 2px;
+    border-radius: 5px;
+    height: 70px;
+  }
+}
+@media only screen and (max-width: 1023px) and (min-width: 769px) {
+  .App {
+    width: 80vw !important;
+    margin-top: 90px !important;
+    padding: 90px !important;
+  }
+}
+@media only screen and (min-width: 1024px) {
+  body {
+    overflow: hidden;
+  }
+  header {
+    height: 75px;
+  }
+  header button {
+    display: block;
+  }
+  header nav {
+    margin-left: auto;
+    margin-right: auto;
+    width: 780px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-height: 74px;
+  }
+  header nav button {
+    border: 0px;
+    border-bottom: 5px white solid;
+    width: 250px;
+    padding-top: 25px;
+    font-size: 20px;
+    padding-bottom: 20px;
+    background-color: white;
+    box-sizing: border-box;
+    max-height: 74px;
+    font-weight: bold;
+  }
+  header nav button:hover {
+    border-bottom: 5px orange solid;
+    font-size: 23px;
+    font-weight: bold;
+    color: orange;
+    padding-top: 20px;
+    transition: font-size 1s, border-bottom 1s;
+  }
+  header nav .selected {
+    border-bottom: 5px orange solid;
+    font-size: 24px;
+    color: orange;
+  }
+  .container {
+    display: flex;
+  }
+  .container .questions-container {
+    margin: 30px 20px;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    background: rgba(255, 255, 255, 0.4);
+    backdrop-filter: blur(2px);
+    height: calc(80vh - 40px);
+    max-width: 250px;
+    min-width: 100px;
+    width: 15vw;
+    padding: 10px;
+    border-radius: 15px;
+    float: left;
+  }
+  .container .questions-container .question {
+    max-height: calc(80vh - 20px - 40px);
+    overflow-y: auto;
+    -webkit-overflow: visible;
+    scrollbar-color: lightgray rgba(255, 255, 255, 0.4);
+    scrollbar-width: thin;
+  }
+  .container .questions-container ul {
+    list-style-type: none;
+    padding: 0;
+    margin: 0;
+  }
+  .container .questions-container li {
+    background-color: rgba(255, 255, 255, 0.4);
+    border-radius: 10px;
+    padding: 8px;
+    margin: 5px;
+    cursor: pointer;
+  }
+  .container .App-container {
+    max-width: calc(100vw - 600px);
+  }
+  .container .App-container .App {
+    width: 780px;
+    margin-top: 70px;
+    padding: 70px;
+    min-height: 60vh;
+    font-size: 24px;
+  }
+  .container .App-container .App .App__Content__Center {
+    margin-top: auto;
+    margin-bottom: auto;
+  }
+  .container .App-container .App .App__Content__Center h1 {
+    text-align: center;
+    margin-top: 0px;
+  }
+  .container .App-container .App .App__Content__Center img {
+    height: 33%;
+    width: 100%;
+    display: none;
+  }
+  .container .App-container .App .App__Button-Container {
+    width: 60%;
+    margin-top: 50px;
+  }
+  .container .App-container .App .App__Button-Container .App__Button {
+    width: 70px;
+    height: 70px;
+    padding: 10px;
+    border-radius: 35px;
+    font-size: 25px;
+  }
+  .container .App-container .App .App__Button-Container .App__Button:hover {
+    font-size: 33px;
+  }
+  .container .App-container .App__Controls {
+    width: 100%;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    z-index: 2;
+    margin-top: 50px;
+    justify-content: space-between;
+  }
+  .container .App-container .App__Controls button {
+    width: 60px;
+    height: 60px;
+    font-size: 25px;
+  }
+  .container .App-container .App__Controls button:hover {
+    box-shadow: 0px 0px 20px 8px #00FFaa;
+    text-shadow: 2px -1px 10px #0F0;
+    transition: box-shadow 1s;
+  }
+}
+
+/*# sourceMappingURL=style.css.map */

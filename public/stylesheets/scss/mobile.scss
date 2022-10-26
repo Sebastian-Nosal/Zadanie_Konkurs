@@ -1,0 +1,200 @@
+@import 'mixins.scss';
+
+body{
+    background-image: url('/static/images/background.jpg');
+    background-size: 100vw 100vh;
+    @include zeroAll();
+
+}
+ 
+header
+{
+    background-color: white;
+    box-shadow: 0px 0px 30px 0px black;
+    border-bottom: 1px solid black;
+    display: flex;
+    position: sticky;
+    top: 0px;
+    z-index: 2;
+    height: 30px;
+    max-width: 100vw;
+    box-sizing: border-box;
+
+    nav
+    {
+        display: none;
+        button{
+            display: block;
+        }
+    }
+}
+
+aside
+{
+    display: none;
+}
+
+.container
+{
+    width: 100vw;
+    box-sizing: border-box;
+
+    .App-container
+    {
+        width: 100vw;
+        margin-bottom: 70px;
+        .App
+        {
+            width: 96vw;
+            min-height: 60vh;
+            @include center();
+            @include centerVerticaly();
+            margin-top: 30px;
+            box-sizing: border-box;
+            padding: 10px 20px;
+            border: 1px solid rgba($color: #FFF, $alpha: 0.4);
+            border-radius: 15px;
+            backdrop-filter: blur(4px);
+            background-color: rgba(#FFF, 0.2);
+            font-size: 15px;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            text-align: justify;
+            display: flex;
+            flex-direction: column;
+            justify-content: stretch;
+    
+            .App__Content__Center
+            {
+               @include centerVerticaly();
+            
+                h1
+                {
+                    text-align: center;
+                }
+                img
+                {
+                    height: 33%;
+                    width: 100%;
+                    display: none;
+                }
+            }
+    
+            .App__Button-Container
+            {
+                display: flex;
+                width: 80%;
+                justify-content: space-between;
+                @include center();
+                margin-top: 10px;
+                margin-bottom: 40px;
+    
+                .App__Button
+                {
+                    width: 40px;
+                    height: 40px;
+                    box-sizing: border-box;
+                    padding: 10px;
+                    border-radius: 20px ;
+                    background-color: rgba($color: #303030, $alpha: 0.4);
+                    color: white;
+                    font-size: 18px;
+                    font-weight: bolder;
+                    box-shadow: 0px 0px 10px 2px white;
+                    border: 1px;
+                    cursor: pointer;
+                }
+    
+                .App__Button:hover
+                {
+                    font-size: 20px;
+                }
+
+                .App__Button:first-child:hover
+                {
+                    color: #44aaFF;
+                    text-shadow: 0px 0px 2px #44aaff;
+                    box-shadow: 0px 0px 10px 5px #44aaff;
+                    transition: text-shadow 0.7s, box-shadow 0.7s;
+                }
+    
+                .App__Button:nth-child(2):hover
+                {
+                    color: #FFFF00;
+                    text-shadow: 0px 0px 2px #FFFF00;
+                    box-shadow: 0px 0px 10px 5px #FFFF00;
+                    transition: text-shadow 0.7s, box-shadow 0.7s;
+                }
+    
+                .App__Button:nth-child(3):hover
+                {
+                    color: #FF00FF;
+                    text-shadow: 0px 0px 2px #FF00FF;
+                    box-shadow: 0px 0px 10px 5px #FF00FF;
+                    transition: text-shadow 0.7s, box-shadow 0.7s;
+                }
+    
+                .App__Button:nth-child(4):hover
+                {
+                    color: #FFAA00;
+                    text-shadow: 0px 0px 2px #FFAA00;
+                    box-shadow: 0px 0px 10px 5px #FFAA00;
+                    transition: text-shadow 0.7s, box-shadow 0.7s;
+                }
+            }
+    
+        }
+    
+        .App__Controls
+        {
+            width: 100%;
+            display: flex;
+            @include center();
+            z-index: 2;
+            margin-top: auto;
+            justify-content: space-between;
+    
+            button
+            {
+                box-sizing: border-box;
+                background-color: rgba(#303030, 0.4);
+                border: 1px solid rgba(#0FA, 0.4);
+                border-radius: 40px;
+                width: 40px;
+                height: 40px;
+                font-weight: bolder;
+                font-size: 18px;
+                color: #0FA;
+                text-shadow: 2px -1px 8px#0FB;
+                box-shadow: 0px 0px 15px #00FFaa;
+                cursor: pointer;
+            }
+    
+            button:hover
+            {
+                box-shadow: 0px 0px 20px 8px #00FFaa;
+                text-shadow: 2px -1px 10px #0F0;
+                transition: box-shadow 1s;
+            }
+           
+        }
+    }
+}
+
+footer
+{
+    background-color: rgba(#303030, 0.8);
+    color: white;
+    width: 100%;
+    display: flex;
+    justify-content: space-evenly;
+    height: 54px;
+    align-items: center;
+    position: fixed;
+    bottom: 0px;
+    margin: 0px;
+    a
+    {
+        text-decoration: none;
+        color: white;
+    }
+}

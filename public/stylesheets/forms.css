@@ -1,0 +1,94 @@
+body {
+  overflow-x: hidden;
+}
+
+.container {
+  display: block;
+  height: 100%;
+  margin-bottom: 60px;
+}
+.container .App-container {
+  margin: 0 auto;
+  width: 100vw;
+}
+.container .App-container .App {
+  min-height: 80vh;
+  padding-bottom: 30px;
+  max-width: 90vw;
+}
+.container .App-container .App .App__Content__Center fieldset {
+  display: flex;
+  flex-direction: column;
+  border: 0px;
+}
+.container .App-container .App .App__Content__Center fieldset span {
+  color: red;
+  font-weight: bold;
+  margin: 0px auto;
+  margin-bottom: 0px;
+  position: relative;
+  z-index: 1.1;
+  top: 20px;
+  font-size: 19px;
+}
+.container .App-container .App .App__Content__Center fieldset a {
+  display: block;
+  text-decoration: none;
+  color: black;
+}
+.container .App-container .App .App__Content__Center fieldset select {
+  margin-top: 15px;
+  padding: 10px;
+  border-radius: 15px;
+  font-size: 18px;
+}
+.container .App-container .App .App__Content__Center fieldset label {
+  margin-top: 15px;
+  margin-bottom: 5px;
+  margin-left: 5px;
+}
+.container .App-container .App .App__Content__Center fieldset input[type=email], .container .App-container .App .App__Content__Center fieldset input[type=password], .container .App-container .App .App__Content__Center fieldset input[type=text] {
+  font-size: 18px;
+  padding: 10px;
+  border-radius: 14px;
+  font-family: "Franklin Gothic Medium", "Arial Narrow", Arial, sans-serif;
+}
+.container .App-container .App .App__Content__Center fieldset .checkbox-label {
+  font-size: 18px;
+  margin-top: 5px;
+}
+.container .App-container .App .App__Content__Center fieldset input[type=checkbox] {
+  margin-right: auto;
+}
+.container .App-container .App .App__Content__Center fieldset .from__button-container {
+  margin-top: 50px;
+  display: flex;
+  justify-content: space-between;
+}
+.container .App-container .App .App__Content__Center fieldset .from__button-container input[type=submit], .container .App-container .App .App__Content__Center fieldset .from__button-container button {
+  width: calc(50% - 5px);
+  padding: 20px;
+  box-sizing: border-box;
+  font-size: 20px;
+  float: left;
+  border: 1px solid white;
+  background-color: white;
+  cursor: pointer;
+}
+.container .App-container .App .App__Content__Center fieldset .from__button-container button:hover {
+  transform: scale(105%);
+  transition: transform 1s;
+}
+.container .App-container .App .App__Content__Center fieldset .from__button-container input[type=submit] {
+  background-color: rgba(255, 69, 0, 0.7);
+  border-color: orangered;
+  color: white;
+  font-weight: bolder;
+  font-size: 24px;
+}
+.container .App-container .App .App__Content__Center fieldset .from__button-container input[type=submit]:hover {
+  transform: scale(105%);
+  transition: transform 1s;
+}
+
+/*# sourceMappingURL=forms.css.map */

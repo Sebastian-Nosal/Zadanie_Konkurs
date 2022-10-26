@@ -1,0 +1,127 @@
+@import 'mixins.scss';
+
+body
+{
+    overflow-x: hidden;
+}
+
+.container
+{
+    display: block;
+    height: 100%;
+    margin-bottom: 60px;
+    
+    .App-container
+    {
+        margin: 0 auto;
+        width: 100vw;
+
+        .App
+        {
+            min-height: 80vh;
+            padding-bottom: 30px;
+            max-width: 90vw;
+            .App__Content__Center
+            {
+               fieldset
+               {
+                    display: flex;
+                    flex-direction: column;
+                    border: 0px;
+
+                    span
+                    {
+                        color: red; 
+                        font-weight: bold; 
+                        margin: 0px auto;
+                        margin-bottom: 0px;
+                        position: relative;
+                        z-index: 1.1;
+                        top: 20px;
+                        font-size: 19px;
+                    }
+
+                    a 
+                    {
+                        display: block;
+                        text-decoration:  none;
+                        color: black;
+                    }
+
+                    select 
+                    {
+                        margin-top: 15px;
+                        padding: 10px;
+                        border-radius: 15px;
+                        font-size:18px;
+                    }
+
+                    label
+                    {
+                        margin-top: 15px;
+                        margin-bottom: 5px;
+                        margin-left: 5px;
+                    }
+
+                    input[type=email], input[type=password], input[type=text]
+                    {
+                        font-size: 18px;
+                        padding: 10px;
+                        border-radius: 14px;
+                        font-family:'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
+                    }
+
+                    .checkbox-label
+                    {
+                        font-size: 18px;
+                        margin-top: 5px;
+                    }
+                    
+                    input[type=checkbox]
+                    {
+                       margin-right: auto;
+                    }
+                    .from__button-container
+                    {
+                        margin-top: 50px;
+                        display: flex;
+                        justify-content: space-between;
+
+                        input[type=submit], button 
+                        {
+                            width: calc(50% - 5px);
+                            padding: 20px;
+                            box-sizing: border-box;
+                            font-size: 20px;
+                            float: left;
+                            border: 1px solid white;
+                            background-color: white;
+                            cursor: pointer;
+                        }
+
+                        button:hover
+                        {
+                            transform: scale(105%);
+                            transition: transform 1s;
+                        } 
+                        
+                        input[type=submit]
+                        {
+                            background-color: rgba(orangered, 0.7); 
+                            border-color: orangered;
+                            color: white;
+                            font-weight: bolder;
+                            font-size: 24px;
+                        }
+
+                        input[type=submit]:hover
+                        {
+                            transform: scale(105%);
+                            transition: transform 1s;  
+                        }
+                    }
+               }
+            }
+        }
+    }
+}

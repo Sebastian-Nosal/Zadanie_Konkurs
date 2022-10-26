@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/stylesheets/style.css">
+    <link rel="stylesheet" href="/static/stylesheets/forms.css">
+    <title>Strona Główna</title>
+</head>
+<body>
+    <div class="container">
+        <div class="App-container">
+            <main>
+                <div class="App">
+                    <div class="App__Content__Center">
+                        <form action="/login" method="post">
+                            <h1>Logowanie</h1>
+                            <fieldset>
+                                <label for="username">Adres E-mail</label>
+                                <input type="email" name="username" id="username" required>
+                                <% if(loginStatus!= null)  { %>
+                                    <span> <%= loginStatus.status%> </span>
+                                <% } %>  
+                                <label for="password">Hasło</label>
+                                <input type="password" name="password" id="password" required>
+                                <div class="from__button-container">
+                                    <button type="button"><a style="text-decoration: none; color:inherit;" href="/register">Rejestracja</a></button>
+                                    <input type="submit" value="Zaloguj">
+                                </div>
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </main>
+        </div>
+    </div>
+    <footer>
+        <a href="">API</a>
+        <a href="">Dokumentacja</a>
+        <span> 	&copy; Sebastian Nosal 2022</span>
+        <a href="">Źródła</a>
+        <a href="">Regulamin</a>
+    </footer>
+</body>
+</html>
