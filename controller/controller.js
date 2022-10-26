@@ -1,23 +1,19 @@
 /* eslint-disable no-trailing-spaces */
 /* eslint-disable class-methods-use-this */
 /* eslint-disable linebreak-style */
+
+const {emailSchema, passwordSchema, hash} = require("../config");
+const userModel = require('../model/users');
+
+
 class Controller {
   
-  #sha256= require("crypto-js");
-  #secretKey = process.env.hashSecret ||"Q@sf4yhbdfgu46dxre635243@rfesd43FGDS@#RFt42g4"
-  emailPattern = /^(([^<>()[\]\.,;:\s@\"]+(\.[^<>()[\]\.,;:\s@\"]+)*)|(\".+\"))@(([^<>()[\]\.,;:\s@\"]+\.)+[^<>()[\]\.,;:\s@\"]{2,})$/i;
-  passwordPattern = /^(?=.*[A-Z].*[A-Z])(?=.*[!@#$&*])(?=.*[0-9].*[0-9])(?=.*[a-z].*[a-z].*[a-z]).{8}$/;
 
-  #handleAsync() {
+  handleAsync() {
 
   }
 
-  #hashPassword(password) {
-    
-    let hashedPassword = this.#sha256.HmacSHA256(password, this.#secretKey)
-    console.log(hashedPassword)
-    return hashedPassword
-  }
+  
 
   // Co-work with another controller-
 
@@ -39,17 +35,27 @@ class Controller {
     else res.render('register');
   }
 
-  handleLogin(req, res) {
+  async handleLogin(req, res) {
     if (req.body.username && req.body.password) {
-      if(req.body.password.match(this.passwordPattern)&&req.body.username.match(this.emailPattern))
+     
+      const {username, password} = req.body;
+      console.log(passwordSchema.validate(password)&&emailSchema.validate(username))
+      if(passwordSchema.validate(password)&&emailSchema.validate(username))
       {
-        res.status(200).send('all ok now')
+        const hashedPassword = hash(password);
+        console.log(hashedPassword)
+        if(userModel.checkIfUserIsInDb(username))
+        {
+          if(userModel.checkCredentials(username,hashedPassword)) res.status(200).send('all ok now')
+          else res.status(400).send('Incorrect email or password')
+        }
+        else res.status(400).send('Not such user in database. Register first')
       }
       else
       {
         res.status(400).send('Invalid credentials');
       }
-    }
+    } 
     else
     {
       res.status(400).send('Missing data')

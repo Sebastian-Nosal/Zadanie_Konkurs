@@ -3,7 +3,6 @@ const express = require('express');
 const path = require('path');
 const session = require('express-session');
 
-const PORT = process.env.PORT || 8080;
 const app = express();
 
 const sessionOptions = { secret: 'SECRET', saveUninitialized: true, resave: true };
@@ -42,4 +41,4 @@ app.use((err, req, res) => {
   res.render('error');
 });
 
-app.listen(PORT, () => console.log(`Server works on port ${PORT}`));
+module.exports = app;

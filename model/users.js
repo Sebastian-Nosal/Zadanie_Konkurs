@@ -1,3 +1,4 @@
+const { ObjectId } = require('mongodb');
 const Database = require('./database');
 
 class Users extends Database
@@ -6,36 +7,68 @@ class Users extends Database
   {
     super();
     this.collection = this.db.collection('Users')
-    this.objectId = require('mongodb').ObjectId;
+    const checkIfUserIsInDb = this.checkIfUserIsInDb.bind(this)
     console.log(`połączono z bazą danych + ${this.collection}`)
   }
 
   async getUserById(id)
   {
-    const result = await this.collection.findOne({id: this.ObjectId(id)})
-    console.log(result);
+    try{
+    const result = await this.collection.findOne({_id: new ObjectId(id)})
     return result;
+    }
+    catch(err)
+    {
+      return null;
+    }
   }
 
   async getUserByUsername(username)
   {
     const result = await this.collection.findOne({name: username})
-    console.log(result);
     return result;
   }
 
-  async insertUser(newUser)
+  async insertUser(username,hash,type)
   {
-    const result = await this.collection.insertOne(newUser)
-    console.log(result);
-    return result;
+    if(username,hash,type)
+    {
+      if(await this.checkIfUserIsInDb(username)===false)
+      {
+        try 
+        {
+            const result = await this.collection.insertOne({_id:new ObjectId(),name:username,password: hash,type: type})
+            return true
+        }
+        catch (err)
+        {
+          return false
+        }
+      }
+      else return false
+    }
+    else return false;
   }
 
   async deleteUserById(id)
   {
-    const result = await this.collection.findOneAndDeleteOne({id: this.objectId(id)});
-    console.log(result);
-    return result;
+    if(id)
+    {
+      try 
+      {
+        const result = await this.collection.deleteOne({id: new objectId(id)});
+        if(result.count=== 1) return true;
+        else return false;
+      }
+      catch(err)
+      {
+        return false
+      }
+    }
+    else
+    {
+      return false
+    }
   }
 
   async deleteUserByUsername(username)
@@ -47,15 +80,15 @@ class Users extends Database
 
   async checkIfUserIsInDb(username)
   {
-    const result = await this.collection.find({name: username}).toArray().length;
-    if(result>0) return true;
+    const result = await this.collection.findOne({name: username})
+    if(result) return true;
     else return false;
   }
 
   async checkCredentials(username, hash)
   {
-    const result = await this.collection.find({name: username, password: hash}).toArray().length;
-    if(result>0) return true;
+    const result = await this.collection.find({ $and: [{name:username}, {password:hash}]}).toArray();
+    if(result.length===1) return true;
     else return false;
   }
 
