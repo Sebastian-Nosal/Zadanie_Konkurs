@@ -8,7 +8,7 @@ class Users extends Database
     super();
     this.collection = this.db.collection('Users')
     const checkIfUserIsInDb = this.checkIfUserIsInDb.bind(this)
-    console.log(`połączono z bazą danych + ${this.collection}`)
+    console.log(`połączono z bazą danych`)
   }
 
   async getUserById(id)
@@ -25,8 +25,16 @@ class Users extends Database
 
   async getUserByUsername(username)
   {
-    const result = await this.collection.findOne({name: username})
-    return result;
+    try
+    {
+      const result = await this.collection.findOne({name: username})
+      return result;
+    }
+    catch(err)
+    {
+      return null;
+    }
+    
   }
 
   async insertUser(username,hash,type)
@@ -73,8 +81,7 @@ class Users extends Database
 
   async deleteUserByUsername(username)
   {
-    const result = await this.collection.findOneAndDeleteOne({name: username});
-    console.log(result);
+    const result = await this.collection.deleteOne({name: username});
     return result;
   }
 

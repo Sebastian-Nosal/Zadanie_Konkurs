@@ -48,7 +48,7 @@ describe(`Users's Model Layer Testing`,  () => {
     test('Get User by name when name is undefined', async ()=>{
         expect(await Model.getUserByUsername(undefined)).toBe(null)
     })
-
+    /*
     test('Insert User - correct args', async ()=>{
         expect(await Model.insertUser("simpleUserN@me", "simplePass", "Any")).toBe(true)
     })
@@ -71,5 +71,6 @@ describe(`Users's Model Layer Testing`,  () => {
     test('Delete user by ID when Id is undefined', async()=>{
         expect(await Model.deleteUserById()).toBe(false)
     })
+    */
    
 });

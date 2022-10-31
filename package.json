@@ -14,7 +14,9 @@
     "express": "~4.16.1",
     "express-session": "^1.17.3",
     "http-errors": "~1.6.3",
+    "jsonwebtoken": "^8.5.1",
     "mongodb": "^4.11.0",
+    "mongoose": "^6.7.0",
     "morgan": "~1.9.1",
     "password-validator": "^5.3.0"
   },
@@ -38,5 +40,4 @@
       "/node_modules/"
     ]
   }
-
 }
