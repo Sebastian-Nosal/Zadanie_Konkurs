@@ -7,7 +7,7 @@ class Users extends Database
   {
     super();
     this.collection = this.db.collection('Users')
-    const checkIfUserIsInDb = this.checkIfUserIsInDb.bind(this)
+    this.checkIfUserIsInDb = this.checkIfUserIsInDb.bind(this)
     console.log(`połączono z bazą danych`)
   }
 
@@ -32,6 +32,7 @@ class Users extends Database
     }
     catch(err)
     {
+      console.log(err)
       return null;
     }
     
@@ -73,16 +74,25 @@ class Users extends Database
         return false
       }
     }
-    else
-    {
-      return false
-    }
+    else return false
   }
 
   async deleteUserByUsername(username)
   {
-    const result = await this.collection.deleteOne({name: username});
-    return result;
+    if(username)
+    {
+      try 
+      {
+        const result = await this.collection.deleteOne({name: username});
+        if(result.count=== 1) return true;
+        else return false;
+      }
+      catch(err)
+      {
+        return false
+      }
+    }
+    else return false
   }
 
   async checkIfUserIsInDb(username)
