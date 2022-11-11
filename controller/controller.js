@@ -10,6 +10,7 @@ const controller =  {
   
 
   renderMainPage: function(req, res) {
+    console.log(req.session)
     if (typeof req.session.account !== 'undefined') {
       if (req.session.account.type === 'student') res.render('student');
       else if(req.session.account.type==='teacher')res.render('teacher');
@@ -41,7 +42,7 @@ const controller =  {
             const type = await userModel.getUserByUsername(username);
             if(type) 
             {
-              req.session.account = {username: username, type: type }
+              req.session.account = {username: username, type: type.type }
               const token = await apiController.auth(username,type);
               //console.log(token)
               res.cookie('token', token);

@@ -1,5 +1,6 @@
 /* eslint-disable linebreak-style */
 const express = require('express');
+const { inserAnswer } = require('../controller/api_controller');
 const apiController = require('../controller/api_controller');
 
 const apiRouter = express.Router();
@@ -8,13 +9,13 @@ apiRouter.get('/', apiController.docs);
 apiRouter.post('/auth',apiController.handleAuth);
 
 apiRouter.get('/users/:username', apiController.getUser)
-apiRouter.post('/users', apiController.insertUser)
+apiRouter.post('/users/', apiController.insertUser)
 apiRouter.patch('/users/:username',apiController.modifyUser)
 apiRouter.delete('/users/:username',apiController.deleteUser)
 
-apiRouter.get('/questions',apiController.getQuestions)
+apiRouter.get('/questions/',apiController.getQuestions)
 apiRouter.get('/questions/:id',apiController.getQuestion)
-apiRouter.post('/questions', apiController.insertQuestion)
+apiRouter.post('/questions/', apiController.insertQuestion)
 apiRouter.put('/question/:id')
 apiRouter.patch('/question/:id')
 apiRouter.delete('/question/:id')
@@ -31,5 +32,8 @@ apiRouter.put('/groups/:id')
 apiRouter.patch('/groups/:id')
 apiRouter.delete('/groups/id')
 
+apiRouter.get('/answers/', apiController.getAnswer)
+apiRouter.get('/answers/:id', apiController.getAnswer)
+apiRouter.post('/answers/', apiController.insertAnswer)
 
 module.exports = apiRouter;

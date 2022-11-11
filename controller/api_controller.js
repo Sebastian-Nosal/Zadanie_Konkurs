@@ -4,6 +4,7 @@ const userModel = require('../model/users')
 const questionModel = require('../model/questions');
 const groupModel = require('../model/groups')
 const examModel = require('../model/exams')
+const answerModel = require('../model/answers')
 const JWTSECRET = process.env.JWTSECRET || "iufghvkledsrkgl;'erfhkloegkledtjhnlvbpryhnkgl;nml;t'thl;hlbl;fp[6yryg,rtfd;'h,rt;'hb,l;l;gbrthledt'kjrtjlk,t;'jhlrp[yfjkh[]re";
 
 class apiController
@@ -23,6 +24,8 @@ class apiController
         this.getGroup = this.getGroup.bind(this);
         this.getExam = this.getExam.bind(this);
         this.insertExam = this.insertExam.bind(this);
+        this.inserAnswer = this.insertAnswer.bind(this);
+        this.getAnswer = this.getAnswer.bind(this);
     }
 
     docs (req,res,next)
@@ -51,11 +54,11 @@ class apiController
         {
             return {code: 403, comment: 'any token send'}
         }
-        console.log(token)
+        //console.log(token)
         try
         {
             const decoded = Object.assign({code: 200, comment:'ok'},jwt.verify(token, JWTSECRET));
-            console.log(decoded);
+            //console.log(decoded);
             return(decoded);
         }
         catch(err)
@@ -420,6 +423,76 @@ class apiController
             else res.status(400).send('Missing data');
         }
         else res.status(401).send('No permission');
+    }
+
+    //answers
+
+    async getAnswer(req,res)
+    {
+        const user = await this.isAuth(req)
+        if(user.code===200)
+        {
+            if(user.type==='student')
+            {
+                try
+                {
+                    const result = await  answerModel.getAnswer(id)
+                    res.status(200).json(result);
+                }
+                catch(err)
+                {
+                    throw "Internal Problem";
+                }
+            }
+            else if(user.type==='teacher')
+            {
+                let query;
+                if(req.query.exam) query = {examId:req.query.exam}; 
+                else if(req.query.username) { query = {user:req.query.username}}
+                else res.status(400).send('Missing Data');
+                console.log(query);
+                try
+                {
+                    if(query)
+                    {
+                        const result = await  answerModel.getAnswers(query)
+                        //console.log(result);
+                        res.status(200).json(result);
+                    }
+                    
+                }
+                catch(err)
+                {
+                    throw "Internal Problem"
+                }
+            }
+            else res.status(400).send('Unknown user type');
+        }
+        else res.status(401).send('No permission')
+    }
+
+    async insertAnswer(req,res)
+    {
+        const user = await this.isAuth(req);
+        if(user.code===200)
+        {
+            const {examId,answers} = req.body;
+            console.log(answers)
+            if(examId&&answers)
+            {
+                try{
+                    const result = answerModel.insertAnswer(user.username, examId, answers);
+                    res.status(200).json(result);
+                }
+                catch(err)
+                {
+                    console.log(err);
+                    res.status(500).send('Internal Error');
+                }
+            }
+            else res.status(400).send('Invalid Request');          
+        }
+        else res.status(201).send('No Permission');
     }
 }
 
