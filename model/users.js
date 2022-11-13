@@ -14,12 +14,13 @@ class Users extends Database
   async getUserById(id)
   {
     try{
-    const result = await this.collection.findOne({_id: new ObjectId(id)})
-    return result;
+      let result = await this.collection.findOne({_id: new ObjectId(id)})
+      delete result.password;
+      return result;
     }
     catch(err)
     {
-      return null;
+      throw "Internal Error"
     }
   }
 
@@ -28,6 +29,7 @@ class Users extends Database
     try
     {
       const result = await this.collection.findOne({name: username})
+      delete result.password;
       return result;
     }
     catch(err)

@@ -49,7 +49,7 @@ class Answers extends Database
   {
     if(query&&typeof query === "object")
       {
-        if(query.exam) {query.exam = new ObjectId(query.exam)}
+        if(query.exam) {query.examId = new ObjectId(query.examId)}
         console.log(query)
         try
         {

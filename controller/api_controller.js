@@ -4,7 +4,8 @@ const userModel = require('../model/users')
 const questionModel = require('../model/questions');
 const groupModel = require('../model/groups')
 const examModel = require('../model/exams')
-const answerModel = require('../model/answers')
+const answerModel = require('../model/answers');
+const { query } = require('express');
 const JWTSECRET = process.env.JWTSECRET || "iufghvkledsrkgl;'erfhkloegkledtjhnlvbpryhnkgl;nml;t'thl;hlbl;fp[6yryg,rtfd;'h,rt;'hb,l;l;gbrthledt'kjrtjlk,t;'jhlrp[yfjkh[]re";
 
 class apiController
@@ -14,6 +15,7 @@ class apiController
     {
         this.isAuth = this.isAuth.bind(this);
         this.auth = this.auth.bind(this);
+        this.getMe = this.getMe.bind(this);
         this.getUser = this.getUser.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
         this.insertUser = this.insertUser.bind(this);
@@ -23,9 +25,16 @@ class apiController
         this.insertGroup = this.insertGroup.bind(this);
         this.getGroup = this.getGroup.bind(this);
         this.getExam = this.getExam.bind(this);
+        this.getExams = this.getExams.bind(this)
         this.insertExam = this.insertExam.bind(this);
         this.inserAnswer = this.insertAnswer.bind(this);
         this.getAnswer = this.getAnswer.bind(this);
+    }
+
+    allowCors(req,res,next)
+    {
+        res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
+        next();
     }
 
     docs (req,res,next)
@@ -86,6 +95,27 @@ class apiController
             else res.status(400).send('not such user');
         }
         else res.status(400).send('missing data');
+    }
+
+    async getMe(req,res)
+    {
+        console.log('xxx')
+        const user = await this.isAuth(req);
+        console.log(user);
+        if(user.code===200)
+        {
+            try{
+                const result = await userModel.getUserByUsername(user.username);
+                console.log(result);
+                res.status(200).json(result);
+            }
+            catch(err)
+            {
+                console.log(err);
+                res.status(500).send('Internal Problem')
+            }
+        }
+        else res.status(401).send("Not logged in" + user);
     }
 
     //Users Methods
@@ -398,6 +428,12 @@ class apiController
             }
         }
         else res.status(400).send('missing params')
+    }
+
+    async getExams(req,res);
+    {
+        const user = this.isAuth(req);
+        let query = {} 
     }
 
     async insertExam(req,res)
