@@ -9,24 +9,6 @@ class Groups extends Database
         this.collection = this.db.collection('Group')
     }
 
-    async addGroup(name,teacher,members)
-    {
-        console.log(typeof members);
-        console.log(members);
-        try{
-            if(name&&teacher&&members&&Array.isArray(members))
-            {
-                const result  = await this.collection.insertOne({_id : ObjectId(), name: name, teacher:teacher,members:members});
-                return result;
-            }
-            else throw "Missing Arguments"
-        }
-       catch(error)
-       {
-        return error;
-       }
-    }
-
     async getGroup(id)
     {
         if(id)
@@ -42,6 +24,80 @@ class Groups extends Database
         }
         else throw "Missing argument"
     }
+
+    async getGroups(query)
+    {
+        if(query)
+        {
+            try
+            {
+                return await this.collection.find(query).toArray();
+            }
+            catch(err)
+            {
+                console.log(err);
+                throw "Internal Error"
+            }
+        } else throw "Missing argument"
+    }
+
+    async insertGroup(name,teacher,members)
+    {
+        //console.log(typeof members);
+       // console.log(members);
+        try{
+            if(name&&teacher&&members&&Array.isArray(members))
+            {
+                const result  = await this.collection.insertOne({_id : ObjectId(), name: name, teacher:teacher,members:members});
+                return result;
+            }
+            else throw "Missing Arguments"
+        }
+       catch(error)
+       {
+        return error;
+       }
+    }
+
+    async deleteGroup(id)
+    {
+        if(id)
+        {
+        try 
+        {
+            const result = await this.collection.deleteOne({_id: new objectId(id)});
+            if(result.count=== 1) return result;
+            else throw "Invalid ID, nothing deleted"
+        }
+        catch(err)
+        {
+        throw "InternalError"
+        }
+        }
+        else throw "Missing argument ID"
+    }
+
+    async modifyGroup(id,update)
+    {
+        if(update&&id)
+        {
+            
+            try
+            {
+                let result1="nothing pushed", result2 = "nothing pulled";
+                if(update.$push) result1 = await this.collection.updateOne({_id: ObjectId(id)}, {$push: update.$push});
+                if(update.$pull) result2 = await this.collection.updateOne({_id: ObjectId(id)}, {$pull: {members: {$in: update.$pull.members}}});
+                return JSON.stringify(result1) + JSON.stringify(result2);
+            }
+            catch(err)
+            {
+                console.log(err);
+                throw "Internal error";
+            }
+        }
+        else throw "Mising argument(s)"
+    }
+
 }
 
 module.exports = new Groups();

@@ -80,6 +80,41 @@ class Questions extends Database
         }
         else throw "Missing Arguments"
     }
+
+    async deleteQuestion(id)
+    {
+        if(id)
+        {
+        try 
+        {
+            const result = await this.collection.deleteOne({_id: ObjectId(id)});
+        }
+        catch(err)
+        {
+            console.log(err)
+            throw "Internal Error"
+        }
+        }
+        else throw "Missing argument ID"
+    }
+
+    async modifyQuestion(id,update)
+    {
+        if(update&&id)
+        {
+            try
+            {
+                const result = await this.collection.updateOne({_id: ObjectId(id)}, {$set: update});
+                return result;
+            }
+            catch(err)
+            {
+                console.log(err);
+                throw "Internal error";
+            }
+        }
+        else throw "Mising argument(s)"
+    }
 }
 
 module.exports = new Questions()

@@ -1,11 +1,10 @@
 const jwt = require('jsonwebtoken');
-const { hash, emailSchema, passwordSchema } = require('../config');
+const { hash, emailSchema, passwordSchema} = require('../config');
 const userModel = require('../model/users')
 const questionModel = require('../model/questions');
 const groupModel = require('../model/groups')
 const examModel = require('../model/exams')
 const answerModel = require('../model/answers');
-const { query } = require('express');
 const JWTSECRET = process.env.JWTSECRET || "iufghvkledsrkgl;'erfhkloegkledtjhnlvbpryhnkgl;nml;t'thl;hlbl;fp[6yryg,rtfd;'h,rt;'hb,l;l;gbrthledt'kjrtjlk,t;'jhlrp[yfjkh[]re";
 
 class apiController
@@ -13,28 +12,37 @@ class apiController
 
     constructor()
     {
+
+        //Main API + auth
         this.isAuth = this.isAuth.bind(this);
         this.auth = this.auth.bind(this);
         this.getMe = this.getMe.bind(this);
-        this.getUser = this.getUser.bind(this);
         this.handleAuth = this.handleAuth.bind(this);
+
+        this.getUser = this.getUser.bind(this);
         this.insertUser = this.insertUser.bind(this);
         this.deleteUser = this.deleteUser.bind(this);
+        this.modifyUser = this.modifyUser.bind(this);
+
         this.getQuestions = this.getQuestions.bind(this);
         this.insertQuestion = this.insertQuestion.bind(this);
+        this.deleteQuestion = this.deleteQuestion.bind(this);
+        this.modifyQuestion = this.modifyQuestion.bind(this);
+
         this.insertGroup = this.insertGroup.bind(this);
         this.getGroup = this.getGroup.bind(this);
+        this.getGroups = this.getGroups.bind(this);
+        this.deleteGroup = this.deleteGroup.bind(this);
+        this.modifyGroup = this.modifyGroup.bind(this);
+
         this.getExam = this.getExam.bind(this);
         this.getExams = this.getExams.bind(this)
         this.insertExam = this.insertExam.bind(this);
+        this.deleteExam = this.deleteExam.bind(this);
+        this.modifyExam = this.modifyExam.bind(this);
+
         this.inserAnswer = this.insertAnswer.bind(this);
         this.getAnswer = this.getAnswer.bind(this);
-    }
-
-    allowCors(req,res,next)
-    {
-        res.set('Access-Control-Allow-Origin', 'http://localhost:3000');
-        next();
     }
 
     docs (req,res,next)
@@ -59,6 +67,7 @@ class apiController
     {
         const token = req.body.token || req.query.token || req.headers["x-access-token"];
         //console.log(token)
+        //console.log(req)
         if(!token)
         {
             return {code: 403, comment: 'any token send'}
@@ -67,7 +76,7 @@ class apiController
         try
         {
             const decoded = Object.assign({code: 200, comment:'ok'},jwt.verify(token, JWTSECRET));
-            //console.log(decoded);
+            console.log(decoded);
             return(decoded);
         }
         catch(err)
@@ -179,17 +188,14 @@ class apiController
         else res.status(400).send('Missing data')
     }
 
-    async modifyUser(req,res)
-    {
-
-    }
-
     async deleteUser(req,res)
     {
         const user = await this.isAuth(req);
+        console.log(user.username + " <===> " + req.params.username)
         if(user.username===req.params.username)
         {
-            try {
+            try 
+            {
                 if(await userModel.deleteUserByUsername(req.params.username)) 
                 {
                     
@@ -203,6 +209,37 @@ class apiController
             }
         }
         else res.status(401).send('No permission. Only owner of the account, can delete it')
+    }
+
+    async modifyUser(req,res)
+    {
+        const user = await this.isAuth(req);
+        //console.log(user.username + " <===> " + req.params.username)
+        if(req.params.username)
+        {
+            if(req.params.username===user.username)
+            {
+                const newPassword = req.body.password;
+                if(passwordSchema.validate(newPassword))
+                {
+                    const hashedNewPassword = hash(newPassword);
+                    try
+                    {
+                        const result = await userModel.modifyUser(user.username,{password: hashedNewPassword})
+                        res.status(200).send('Updated')
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send('Internal Error')
+                    }
+                    
+                }
+                else res.status(400).send('invalid new Password')
+            }
+            else res.status(401).send("No permission.")
+        }
+        else res.status(400).send('Missing username')
     }
 
     //Questions Methods
@@ -333,17 +370,89 @@ class apiController
 
     async modifyQuestion(req,res)
     {
+        const user = await this.isAuth(req);
+        let query = {};
 
-    }
+        if(req.params.id)
+        {
+            let lookedQuestion
+            try
+            {
+                lookedQuestion = await questionModel.getOneQuestion(req.params.id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                next();
+            }
+            if(lookedQuestion!==null)
+            {
+                if(lookedQuestion.author===user.username)
+                {
+                    const {content,answerA, answerB,answerC,answerD,correct}= req.body;
+                    if(content) query = Object.assign(query,{content: content})
+                    if(answerA) query = Object.assign(query,{answerA: answerA})
+                    if(answerB) query = Object.assign(query,{answerB: answerB})
+                    if(answerC) query = Object.assign(query,{answerC: answerC})
+                    if(answerD) query = Object.assign(query,{answerD: answerD})
+                    if(correct&&correct.length===1) query = Object.assign(query,{correct: correct.toUpperCase()})
 
-    async correctQuestion(req,res)
-    {
-
+                    console.log(query);
+                    try
+                    {
+                        const result = await questionModel.modifyQuestion(req.params.id,query);
+                        res.status(200).json(result);
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send('Internal Error')
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to modify');
+        }
+        else res.status(400).send('Missing Question ID');
     }
     
-    async deleteQuestion(req,res)
+    async deleteQuestion(req,res,next)
     {
+        const user = await this.isAuth(req);
 
+        if(req.params.id)
+        {
+            let lookedQuestion
+            try
+            {
+                lookedQuestion = await questionModel.getOneQuestion(req.params.id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                console.log(err);
+                next();
+            }
+
+            if(lookedQuestion!==null)
+            {
+                if(lookedQuestion.author===user.username)
+                {
+                    try
+                    {
+                        const result  = await questionModel.deleteQuestion(req.params.id);
+                        res.status(200).send("Deleted question");
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send("Internal Probelm");
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to delete');
+        }
     }
 
     //Groups methods
@@ -369,6 +478,29 @@ class apiController
         else res.status(500).send('U don\'t have permission');
     }
 
+    async getGroups(req,res)
+    {
+        const user = this.isAuth(req);
+        let query = {} ;
+        const member = req.query.member
+        if(member)
+        {
+            query = {members: {$all: [member]}}
+            console.log(query)
+            try
+            {
+                const result = await groupModel.getGroups(query)
+                res.status(200).json(result)
+            }
+            catch(err)
+            {
+                console.log(err)
+                res.status(500).send('Internal Error')
+            }
+        }
+        else res.status(400).send("Missing query")
+    }
+
     async insertGroup(req,res)
     {
         const user = await this.isAuth(req);
@@ -380,7 +512,7 @@ class apiController
             {
                 try
                 {
-                    const result = await groupModel.addGroup(name,user.username,members);
+                    const result = await groupModel.insertGroup(name,user.username,members);
                     console.log(result)
                     res.status(200).send('Group Created with id ' +result.insertedId );
                 }
@@ -400,12 +532,95 @@ class apiController
 
     async modifyGroup(req,res)
     {
+        const user = await this.isAuth(req);
+        let query = {};
+        console.log(req.params.id);
+        if(req.params.id)
+        {
+            let lookedGroup
+            try
+            {
+                lookedGroup = await groupModel.getGroup(req.params.id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                next();
+            }
+            console.log(lookedGroup)
+            if(lookedGroup!==null)
+            {
+                if(lookedGroup.teacher===user.username)
+                {
+                    let {toDelete,toInsert} = req.body
+                    if(toDelete)
+                    {
+                        if(Array.isArray(toDelete)===false) toDelete = [toDelete]; 
+                        query = Object.assign(query,{$pull: {"members":toDelete}})
+                    }
 
+                    if(toInsert)
+                    {
+                        if(Array.isArray(toInsert)===false) toInsert = [toInsert];
+                        query = Object.assign(query, {$push: {"members": {$each: toInsert}}})
+                    }
+
+                    console.log(query);
+                    const id = req.params.id
+                    try
+                    {
+                        const result = await groupModel.modifyGroup(id ,query);
+                        res.status(200).json(result);
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send('Internal Error')
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to modify');
+        }
+        else res.status(400).send('Missing Question ID');
     }
 
-    async deleteGroup(req,res)
+    async deleteGroup(req,res,next)
     {
+        const user = await this.isAuth(req);
 
+        if(req.params.id)
+        {
+            let lookedGroup
+            try
+            {
+                lookedGroup = await groupModel.getGroup(id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                next();
+            }
+
+            if(lookedQuestion!==null)
+            {
+                if(lookedGroup.teacher===user.username)
+                {
+                    try
+                    {
+                        const result  = await groupModel.deleteGroup(req.params.id);
+                        res.status(200).send("Deleted group");
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send("Internal Probelm");
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to delete');
+        }
     }
 
     //Exams Methods
@@ -430,10 +645,28 @@ class apiController
         else res.status(400).send('missing params')
     }
 
-    async getExams(req,res);
+    async getExams(req,res)
     {
         const user = this.isAuth(req);
-        let query = {} 
+        let query = {} ;
+        const {author, assigned} = req.query
+        if(author||assigned)
+        {
+            if(author) query.author = author;
+            if(assigned) query.assignedTo = assigned;
+            
+            try
+            {
+                const result = await this.examModel.getExams(query);
+                res.status(200).send(result)
+            }
+            catch(err)
+            {
+                console.log(err)
+                res.status(500).send('Internal Error')
+            }
+        }
+        else res.status(400).send("Missing query")
     }
 
     async insertExam(req,res)
@@ -461,6 +694,98 @@ class apiController
         else res.status(401).send('No permission');
     }
 
+    async deleteExam(req,res,next)
+    {
+        const user = await this.isAuth(req);
+
+        if(req.params.id)
+        {
+            let lookedExam
+            try
+            {
+                lookedExam = await examModel.getExam(id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                next();
+            }
+
+            if(lookedExam!==null)
+            {
+                if(lookedExam.author===user.username)
+                {
+                    try
+                    {
+                        const result  = await examModel.deleteExam(req.params.id);
+                        res.status(200).send("Deleted group");
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send("Internal Probelm");
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to delete');
+        }
+    }
+
+    async modifyExam(req,res)
+    {
+        const user = await this.isAuth(req);
+        let query = {};
+        console.log(req.params.id);
+        if(req.params.id)
+        {
+            let lookedExam
+            try
+            {
+                lookedExam = await examModel.getExam(req.params.id);
+            }
+            catch(err)
+            {
+                res.status(500).send('Internal Error');
+                next();
+            }
+            console.log(lookedExam)
+            if(lookedExam!==null)
+            {
+                if(lookedExam.author===user.username)
+                {
+                    let {toDelete,toInsert} = req.body
+                    if(toDelete)
+                    {
+                        if(Array.isArray(toDelete)===false) toDelete = [toDelete]; 
+                        query = Object.assign(query,{$pull: {"questions":toDelete}})
+                    }
+
+                    if(toInsert)
+                    {
+                        if(Array.isArray(toInsert)===false) toInsert = [toInsert];
+                        query = Object.assign(query, {$push: {"questions": {$each: toInsert}}})
+                    }
+
+                    console.log(query);
+                    const id = req.params.id
+                    try
+                    {
+                        const result = await examModel.modifyExam(id ,query);
+                        res.status(200).json(result);
+                    }
+                    catch(err)
+                    {
+                        console.log(err);
+                        res.status(500).send('Internal Error')
+                    }
+                }
+                else res.status(401).send('No Permission');
+            }
+            else res.status(404).send('Nothing to modify');
+        }
+        else res.status(400).send('Missing Question ID');
+    }
     //answers
 
     async getAnswer(req,res)

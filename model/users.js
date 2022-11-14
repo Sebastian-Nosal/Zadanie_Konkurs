@@ -67,16 +67,16 @@ class Users extends Database
     {
       try 
       {
-        const result = await this.collection.deleteOne({id: new objectId(id)});
-        if(result.count=== 1) return true;
-        else return false;
+        const result = await this.collection.deleteOne({_id: new objectId(id)});
+        if(result.count=== 1) return result;
+        else throw "Invalid ID, nothing deleted"
       }
       catch(err)
       {
-        return false
+       throw "InternalError"
       }
     }
-    else return false
+    else throw "Missing argument ID"
   }
 
   async deleteUserByUsername(username)
@@ -110,6 +110,24 @@ class Users extends Database
     if(result.length===1) return true;
     else return false;
   }
+
+  async modifyUser(username,update)
+    {
+        if(update&&username)
+        {
+            try
+            {
+                const result = await this.collection.updateOne({name: username}, {$set: update});
+                return result;
+            }
+            catch(err)
+            {
+                console.log(err);
+                throw "Internal error";
+            }
+        }
+        else throw "Mising argument(s)"
+    }
 
 }
 

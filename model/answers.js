@@ -65,6 +65,24 @@ class Answers extends Database
       else throw "Missing or incorrect Argument"
   }
 
+  async deleteAnswer(id)
+    {
+        if(id)
+        {
+        try 
+        {
+            const result = await this.collection.deleteOne({_id: new objectId(id)});
+            if(result.count=== 1) return result;
+            else throw "Invalid ID, nothing deleted"
+        }
+        catch(err)
+        {
+        throw "InternalError"
+        }
+        }
+        else throw "Missing argument ID"
+    }
+
 }
 
 module.exports = new Answers();
