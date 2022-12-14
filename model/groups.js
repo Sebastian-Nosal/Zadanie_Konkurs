@@ -31,11 +31,11 @@ class Groups extends Database
         {
             try
             {
-                return await this.collection.find(query).toArray();
+                const result = await this.collection.find(query).toArray();
+                return result;
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal Error"
             }
         } else throw "Missing argument"
@@ -43,9 +43,8 @@ class Groups extends Database
 
     async insertGroup(name,teacher,members)
     {
-        //console.log(typeof members);
-       // console.log(members);
-        try{
+        try
+        {
             if(name&&teacher&&members&&Array.isArray(members))
             {
                 const result  = await this.collection.insertOne({_id : ObjectId(), name: name, teacher:teacher,members:members});
@@ -63,16 +62,16 @@ class Groups extends Database
     {
         if(id)
         {
-        try 
-        {
-            const result = await this.collection.deleteOne({_id: new objectId(id)});
-            if(result.count=== 1) return result;
-            else throw "Invalid ID, nothing deleted"
-        }
-        catch(err)
-        {
-        throw "InternalError"
-        }
+            try 
+            {
+                const result = await this.collection.deleteOne({_id: new ObjectId(id)});
+                if(result.count=== 1) return result;
+                else throw "Invalid ID, nothing deleted"
+            }
+            catch(err)
+            {
+                throw "InternalError"
+            }
         }
         else throw "Missing argument ID"
     }
@@ -91,7 +90,6 @@ class Groups extends Database
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal error";
             }
         }

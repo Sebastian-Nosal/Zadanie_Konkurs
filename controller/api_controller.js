@@ -12,8 +12,6 @@ class apiController
 
     constructor()
     {
-
-        //Main API + auth
         this.isAuth = this.isAuth.bind(this);
         this.auth = this.auth.bind(this);
         this.getMe = this.getMe.bind(this);
@@ -41,7 +39,7 @@ class apiController
         this.deleteExam = this.deleteExam.bind(this);
         this.modifyExam = this.modifyExam.bind(this);
 
-        this.inserAnswer = this.insertAnswer.bind(this);
+        this.insertAnswer = this.insertAnswer.bind(this);
         this.getAnswer = this.getAnswer.bind(this);
     }
 
@@ -52,7 +50,6 @@ class apiController
 
     auth(username,type)
     {
-        console.log(Date.now())
         return jwt.sign({ username:username, type: type}, JWTSECRET, {expiresIn: '3600s'})
     }
 
@@ -66,22 +63,17 @@ class apiController
     async isAuth(req)
     {
         const token = req.body.token || req.query.token || req.headers["x-access-token"];
-        //console.log(token)
-        //console.log(req)
         if(!token)
         {
             return {code: 403, comment: 'any token send'}
         }
-        //console.log(token)
         try
         {
             const decoded = Object.assign({code: 200, comment:'ok'},jwt.verify(token, JWTSECRET));
-            console.log(decoded);
             return(decoded);
         }
         catch(err)
         {
-            console.log(err);
             return {code: 401, comment: 'Invalid token'}
     
         }
@@ -94,7 +86,6 @@ class apiController
         if(username&&password)
         {
             const hashedPassword = hash(password);
-            console.log(username,hashedPassword)
             if(await userModel.checkCredentials(username,hashedPassword))
             {
                 const result = await userModel.getUserByUsername(username);
@@ -108,19 +99,15 @@ class apiController
 
     async getMe(req,res)
     {
-        console.log('xxx')
         const user = await this.isAuth(req);
-        console.log(user);
         if(user.code===200)
         {
             try{
                 const result = await userModel.getUserByUsername(user.username);
-                console.log(result);
                 res.status(200).json(result);
             }
             catch(err)
             {
-                console.log(err);
                 res.status(500).send('Internal Problem')
             }
         }
@@ -144,7 +131,6 @@ class apiController
                 }
                 catch(err)
                 {
-                   //console.log(err)
                    res.status(500).send('Database error. Please try again later or contact administrator')
                 }
                
@@ -157,7 +143,6 @@ class apiController
     async insertUser(req,res)
     {
         const {username, password, type} = req.body;
-        //console.log(username, password,type)
         if(username&&password&&type)
         {
             const user = await this.isAuth(req);
@@ -191,7 +176,6 @@ class apiController
     async deleteUser(req,res)
     {
         const user = await this.isAuth(req);
-        console.log(user.username + " <===> " + req.params.username)
         if(user.username===req.params.username)
         {
             try 
@@ -214,7 +198,6 @@ class apiController
     async modifyUser(req,res)
     {
         const user = await this.isAuth(req);
-        //console.log(user.username + " <===> " + req.params.username)
         if(req.params.username)
         {
             if(req.params.username===user.username)
@@ -230,7 +213,6 @@ class apiController
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send('Internal Error')
                     }
                     
@@ -243,13 +225,21 @@ class apiController
     }
 
     //Questions Methods
+
     async getQuestion(req,res)
     {
-        console.log(req.params.id)
         if(req.params.id)
         {
-            const question = await questionModel.getOneQuestion(req.params.id);
-            res.status(200).json(question);
+            try
+            {
+                const question = await questionModel.getOneQuestion(req.params.id);
+                res.status(200).json(question);
+            }
+            catch(err)
+            {
+                res.status(500).send("Internal Problem")
+            }
+            
         }
         else res.status(404).send('Cannot access this question');
     }
@@ -257,110 +247,127 @@ class apiController
     async getQuestions(req,res)
     {
         let query = {};
-        const data =this.isAuth(req)
-        const username = data.username || null;
-
-        if(req.query.tag) Object.assign(query,{tags: {$all: [req.query.tag]}});
-        if(req.query.tags) Object.assign(query, {tags: {$all: req.query.tags}});
-        if(req.query.image&&req.query.image!=='false') Object.assign(query, {img: {$ne: ""}})
-        if(req.query.image&&req.query.image==='false') Object.assign(query, {img: ""})
-        if(req.query.correct) Object.assign(query, {correct: req.query.correct})
-
-        const access = [] 
-        if(req.query.author)
+        const data = await this.isAuth(req)
+        if(data.code===200)
         {
-            access.push({$and: [
-                {author: req.query.author},
-                {public: true}
-            ]});
-        } 
-
-        if(req.query.public==='private')
-        {
-            access.push(query, {$and: [
-                {author: username},
-                {public: false} 
-            ]})
-        }
-        
-        if(access.length<=0) Object.assign(query,{public: true})
-        else Object.assign(query,{$or: access})
-
-        //console.log(query)
-        if(JSON.stringify(query)!=='{}') 
-        {
-            try
+            const username = data.username || null;
+            if(req.query.tag) Object.assign(query,{tags: {$all: [req.query.tag]}});
+            if(req.query.tags) Object.assign(query, {tags: {$all: req.query.tags}});
+            if(req.query.image&&req.query.image!=='false') Object.assign(query, {img: {$ne: ""}})
+            if(req.query.image&&req.query.image==='false') Object.assign(query, {img: ""})
+            if(req.query.correct) Object.assign(query, {correct: req.query.correct})
+    
+            const access = [] 
+            if(req.query.author)
             {
-                const result = await questionModel.getAllQuestions(query);
-                result.forEach((el)=>{
-                    delete el.public;
-                    delete el.slug;
-                    delete el.author;
-                    if(el.img==="") delete el.img;
-                })
-                res.send(result)
-            }
-            catch(e)
+                access.push({$and: [
+                    {author: req.query.author},
+                    {public: true}
+                ]});
+            } 
+    
+            if(req.query.public==='private')
             {
-                res.status(500).send('Internal error')
+                access.push(query, {$and: [
+                    {author: username},
+                    {public: false} 
+                ]})
             }
             
+            if(access.length<=0) Object.assign(query,{public: true})
+            else Object.assign(query,{$or: access})
+    
+            if(JSON.stringify(query)!=='{}') 
+            {
+                try
+                {
+                    const result = await questionModel.getAllQuestions(query);
+                    result.forEach((el)=>{
+                        delete el.public;
+                        delete el.slug;
+                        delete el.author;
+                        if(el.img==="") delete el.img;
+                    })
+                    res.send(result)
+                }
+                catch(e)
+                {
+                    res.status(500).send('Internal error')
+                }
+                
+            }
+            else res.status(400).send('U need to add search parameter, like tag or tags, author, image or correct answer letter')
         }
-        else res.status(400).send('U need to add search parameter, like tag or tags, author, image or correct answer letter')
+        else res.status(401).send('No permission')
     }
 
     async insertQuestion(req,res)
     {
         const user = await this.isAuth(req);
-        console.log(user)
-        
         if(user.type==='teacher')
         {
             let {content, correct, tags, isPublic } = req.body;
-            const file = req.files;
+            const files = req.files;
             if(content&&correct&&tags)
             {
                 correct = correct.toUpperCase()
                 const problems = [];
-                if((correct.length===1&&['A','B','C','D','*'].includes(correct.toUpperCase()))===false) problems.push('Correct letter should only contains one letter like a,b,c,d or *')
-
-                if(tags.length===0) problems.push('Question need at least one tag');
-                const hasAnswers = new RegExp(/(A\.)|(B\.)|(C\.)|(D\.)/).test(content)
-                if(hasAnswers)
+                if((correct.length===1&&['A','B','C','D','*'].includes(correct.toUpperCase()))===false) 
+                    problems.push('Correct letter should only contains one letter like a,b,c,d or *')
+                if(tags) 
                 {
-                    content = content.replaceAll('\n');
-                    content = content.replace(/(A\.)|(B\.)|(C\.)|(D\.)/g, "\n").split('\n');
-                } 
-                else problems.push('Invalid or missing answers.')
-
+                    Array.isArray(tags)? tags : tags = [tags];
+                }
+                else problems.push('Question need at least one tag');
+                const hasAnswers = new RegExp(/(A\.)|(B\.)|(C\.)|(D\.)/).test(content)
+                try
+                {
+                    if(hasAnswers)
+                    {
+                        content = content.replaceAll('\n','');
+                        content = content.replace(/(A\.)|(B\.)|(C\.)|(D\.)/g, "\n").split('\n');
+                    } 
+                    else problems.push('Invalid or missing answers.')
+                    
+                    content = content.map(el=>el.trim())
+                }
+                catch(err)
+                {
+                    res.status(400).send('Invalid Content');
+                    next();
+                    return;
+                }
+                
                 if(problems.length>0) res.status(400).send(problems)
                 else 
                 {
-                    isPublic = isPublic || true;
+                  if(isPublic||isPublic==='false')
+                  {
+                    if(isPublic===true||isPublic==='true'||isPublic>=1) isPublic=true
+                    else isPublic=false
+                  }
                     let img;
-                   if(req.files)
-                   {
-                        img = req.files.image || undefined;
-                   }
-                   else img = undefined;
+                    if(req.files)
+                    {
+                            img = req.files.image || undefined;
+                    }
+                    else img = undefined;
                     try
                     {
-                        const isImg = (img !== undefined);
-                        const result = await questionModel.insertQuestion(content,correct,tags, user.username,isPublic,isImg)
-                        if(isImg)
+                        const result = await questionModel.insertQuestion(content,correct,tags, user.username,isPublic,(img!==undefined))
+                        if(img)
                         {
                             let name = img.name.split('.'); 
-                            img.name = result.id + "." + name.at(-1);
-                            img.mv(__dirname+'/public/images/upload/'+ img.name);
+                            name = result.insertedId + "." + 'png'//name.at(-1);
+                            img.name = name;
+                            img.mv('../Back-End/public/images/upload/'+img.name);
                         }
                         res.status(200).send('Question Created')
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send('Internal Error')
                     }
-                    
                 }
             }
             else res.status(400).send('Missing data')
@@ -397,7 +404,6 @@ class apiController
                     if(answerD) query = Object.assign(query,{answerD: answerD})
                     if(correct&&correct.length===1) query = Object.assign(query,{correct: correct.toUpperCase()})
 
-                    console.log(query);
                     try
                     {
                         const result = await questionModel.modifyQuestion(req.params.id,query);
@@ -405,7 +411,6 @@ class apiController
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send('Internal Error')
                     }
                 }
@@ -430,7 +435,6 @@ class apiController
             catch(err)
             {
                 res.status(500).send('Internal Error');
-                console.log(err);
                 next();
             }
 
@@ -445,7 +449,6 @@ class apiController
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send("Internal Probelm");
                     }
                 }
@@ -464,7 +467,6 @@ class apiController
         {
             try{
                 const result = await groupModel.getGroup(req.params.id);
-                console.log(result.members, result.teacher, user)
                 if(result.members.includes(user.username)||result.teacher===user.username)
                     res.status(200).json(result);
                 else res.status(401).send('No permission')
@@ -482,11 +484,10 @@ class apiController
     {
         const user = this.isAuth(req);
         let query = {} ;
-        const member = req.query.member
+        const {member, teacher} = req.query
         if(member)
         {
             query = {members: {$all: [member]}}
-            console.log(query)
             try
             {
                 const result = await groupModel.getGroups(query)
@@ -494,7 +495,19 @@ class apiController
             }
             catch(err)
             {
-                console.log(err)
+                res.status(500).send('Internal Error')
+            }
+        }
+        else if(teacher)
+        {
+            query = {teacher: teacher}
+            try
+            {
+                const result = await groupModel.getGroups(query)
+                res.status(200).json(result)
+            }
+            catch(err)
+            {
                 res.status(500).send('Internal Error')
             }
         }
@@ -504,7 +517,6 @@ class apiController
     async insertGroup(req,res)
     {
         const user = await this.isAuth(req);
-        console.log(user)
         if(user.type==='teacher')
         {
             const {name,members} = req.body;
@@ -513,12 +525,10 @@ class apiController
                 try
                 {
                     const result = await groupModel.insertGroup(name,user.username,members);
-                    console.log(result)
                     res.status(200).send('Group Created with id ' +result.insertedId );
                 }
                 catch(err)
                 {
-                    console.log(err)
                     res.status(500).send('Internal error')
                 }
             }
@@ -534,7 +544,6 @@ class apiController
     {
         const user = await this.isAuth(req);
         let query = {};
-        console.log(req.params.id);
         if(req.params.id)
         {
             let lookedGroup
@@ -547,7 +556,6 @@ class apiController
                 res.status(500).send('Internal Error');
                 next();
             }
-            console.log(lookedGroup)
             if(lookedGroup!==null)
             {
                 if(lookedGroup.teacher===user.username)
@@ -565,7 +573,6 @@ class apiController
                         query = Object.assign(query, {$push: {"members": {$each: toInsert}}})
                     }
 
-                    console.log(query);
                     const id = req.params.id
                     try
                     {
@@ -574,7 +581,6 @@ class apiController
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send('Internal Error')
                     }
                 }
@@ -588,21 +594,20 @@ class apiController
     async deleteGroup(req,res,next)
     {
         const user = await this.isAuth(req);
-
         if(req.params.id)
         {
             let lookedGroup
             try
             {
-                lookedGroup = await groupModel.getGroup(id);
+                lookedGroup = await groupModel.getGroup(req.params.id);
             }
             catch(err)
             {
                 res.status(500).send('Internal Error');
                 next();
+                return;
             }
-
-            if(lookedQuestion!==null)
+            if(lookedGroup!==null&&lookedGroup!==undefined)
             {
                 if(lookedGroup.teacher===user.username)
                 {
@@ -610,17 +615,21 @@ class apiController
                     {
                         const result  = await groupModel.deleteGroup(req.params.id);
                         res.status(200).send("Deleted group");
+                        next();
+                        return;
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send("Internal Probelm");
+                        next();
+                        return;
                     }
                 }
                 else res.status(401).send('No Permission');
             }
             else res.status(404).send('Nothing to delete');
         }
+        res.status(400).send('Missing Id of Group')
     }
 
     //Exams Methods
@@ -638,7 +647,6 @@ class apiController
             }
             catch(err)
             {
-                console.log(err)
                 res.status(500).send('Internal error')
             }
         }
@@ -654,15 +662,13 @@ class apiController
         {
             if(author) query.author = author;
             if(assigned) query.assignedTo = assigned;
-            
             try
             {
-                const result = await this.examModel.getExams(query);
+                const result = await examModel.getExams(query);
                 res.status(200).send(result)
             }
             catch(err)
             {
-                console.log(err)
                 res.status(500).send('Internal Error')
             }
         }
@@ -672,7 +678,6 @@ class apiController
     async insertExam(req,res)
     {
         const user = await this.isAuth(req);
-        console.log(user)
         const {name,questions,assignedTo,active} = req.body;
         if(user.type==='teacher')
         {
@@ -685,7 +690,6 @@ class apiController
                 }
                 catch(err)
                 {
-                    console.log(err)
                     res.status(500).send('Internal server error');
                 }
             }
@@ -697,10 +701,10 @@ class apiController
     async deleteExam(req,res,next)
     {
         const user = await this.isAuth(req);
-
+        const id = req.params.id
         if(req.params.id)
         {
-            let lookedExam
+            let lookedExam;
             try
             {
                 lookedExam = await examModel.getExam(id);
@@ -708,21 +712,19 @@ class apiController
             catch(err)
             {
                 res.status(500).send('Internal Error');
-                next();
+                return 0;
             }
-
-            if(lookedExam!==null)
+            if(lookedExam)
             {
                 if(lookedExam.author===user.username)
                 {
                     try
                     {
-                        const result  = await examModel.deleteExam(req.params.id);
-                        res.status(200).send("Deleted group");
+                        const result  = await examModel.deleteExam(id);
+                        res.status(200).send("Deleted Exam");
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send("Internal Probelm");
                     }
                 }
@@ -730,13 +732,13 @@ class apiController
             }
             else res.status(404).send('Nothing to delete');
         }
+        else res.status(400).send('Bad Request')
     }
 
     async modifyExam(req,res)
     {
         const user = await this.isAuth(req);
         let query = {};
-        console.log(req.params.id);
         if(req.params.id)
         {
             let lookedExam
@@ -749,12 +751,11 @@ class apiController
                 res.status(500).send('Internal Error');
                 next();
             }
-            console.log(lookedExam)
             if(lookedExam!==null)
             {
                 if(lookedExam.author===user.username)
                 {
-                    let {toDelete,toInsert} = req.body
+                    let {toDelete,toInsert,active} = req.body
                     if(toDelete)
                     {
                         if(Array.isArray(toDelete)===false) toDelete = [toDelete]; 
@@ -767,7 +768,12 @@ class apiController
                         query = Object.assign(query, {$push: {"questions": {$each: toInsert}}})
                     }
 
-                    console.log(query);
+                    if(active!==undefined)
+                    {
+                        if(active===1||active==='true'||active===true) query = Object.assign(query,{active: true})
+                        else if(active===0||active==='false'||active===false) query = Object.assign(query,{active: false})
+                    }
+
                     const id = req.params.id
                     try
                     {
@@ -776,7 +782,6 @@ class apiController
                     }
                     catch(err)
                     {
-                        console.log(err);
                         res.status(500).send('Internal Error')
                     }
                 }
@@ -786,7 +791,8 @@ class apiController
         }
         else res.status(400).send('Missing Question ID');
     }
-    //answers
+
+    //Answer Methods
 
     async getAnswer(req,res)
     {
@@ -811,16 +817,13 @@ class apiController
                 if(req.query.exam) query = {examId:req.query.exam}; 
                 else if(req.query.username) { query = {user:req.query.username}}
                 else res.status(400).send('Missing Data');
-                console.log(query);
                 try
                 {
                     if(query)
                     {
                         const result = await  answerModel.getAnswers(query)
-                        //console.log(result);
                         res.status(200).json(result);
                     }
-                    
                 }
                 catch(err)
                 {
@@ -838,22 +841,21 @@ class apiController
         if(user.code===200)
         {
             const {examId,answers} = req.body;
-            console.log(answers)
             if(examId&&answers)
             {
-                try{
+                try
+                {
                     const result = answerModel.insertAnswer(user.username, examId, answers);
                     res.status(200).json(result);
                 }
                 catch(err)
                 {
-                    console.log(err);
                     res.status(500).send('Internal Error');
                 }
             }
             else res.status(400).send('Invalid Request');          
         }
-        else res.status(201).send('No Permission');
+        else res.status(401).send('No Permission');
     }
 }
 

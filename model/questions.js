@@ -16,12 +16,10 @@ class Questions extends Database
             try
             {
                 const result = await this.collection.findOne({_id:ObjectId(id)})
-                //console.log(result)
                 return result;
             }
             catch(err) 
             {
-                console.log(err)
                 throw 'internal error';
             }   
         }
@@ -33,19 +31,16 @@ class Questions extends Database
         try
         {
             const result = await this.collection.find(query).toArray();
-            //console.log(result)
             return result;
         }
         catch(err) 
         {
-            console.log(err)
             throw "Internal Error"
         }   
     }
 
     async insertQuestion(content, correct, tags,author,isPublic,img)
     {
-        isPublic = isPublic || true;
         if(content&&correct&&tags&&isPublic&&content.length>4&&correct.length===1)
         {
             try
@@ -54,7 +49,6 @@ class Questions extends Database
             }
             catch(err)
             {
-                console.log(err);
                 throw "Error during inserting new user"
             }
         }
@@ -65,16 +59,16 @@ class Questions extends Database
     {
         if(arrayOfIds&&Array.isArray(arrayOfIds))
         {
-            let query = arrayOfIds.map(el=> el=ObjectId(el));
+
+            let query = arrayOfIds.map(el=>{console.log(el); el=ObjectId(el); return el});
+           
             try
             {
                 let result = await this.collection.find({_id: {$in: query}}).toArray()
-                console.log(result);
                 return result;
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal Problem"
             }
         }
@@ -91,7 +85,6 @@ class Questions extends Database
         }
         catch(err)
         {
-            console.log(err)
             throw "Internal Error"
         }
         }
@@ -109,7 +102,6 @@ class Questions extends Database
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal error";
             }
         }

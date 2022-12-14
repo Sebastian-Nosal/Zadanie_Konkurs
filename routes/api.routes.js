@@ -1,13 +1,7 @@
-/* eslint-disable linebreak-style */
 const express = require('express');
-const { inserAnswer } = require('../controller/api_controller');
 const apiController = require('../controller/api_controller');
-var cors = require('cors')
 
 const apiRouter = express.Router();
-
-// apiRouter.use(apiController.allowCors)
-apiRouter.use(cors())
 
 apiRouter.get('/', apiController.docs);
 apiRouter.post('/auth',apiController.handleAuth);
@@ -24,17 +18,17 @@ apiRouter.post('/questions/', apiController.insertQuestion)
 apiRouter.patch('/questions/:id', apiController.modifyQuestion)
 apiRouter.delete('/questions/:id', apiController.deleteQuestion)
 
-apiRouter.get('/exams/:id',apiController.getExam)
 apiRouter.get('/exams/',apiController.getExams)
+apiRouter.get('/exams/:id',apiController.getExam)
 apiRouter.post('/exams/', apiController.insertExam)
 apiRouter.patch('/exams/:id', apiController.modifyExam)
-apiRouter.delete('/exams/id',apiController.deleteExam)
+apiRouter.delete('/exams/:id',apiController.deleteExam)
 
-apiRouter.get('/groups/:id',apiController.getGroup)
 apiRouter.get('/groups/',apiController.getGroups)
-apiRouter.post('/groups', apiController.insertGroup)
+apiRouter.get('/groups/:id',apiController.getGroup)
+apiRouter.post('/groups/', apiController.insertGroup)
 apiRouter.patch('/groups/:id',apiController.modifyGroup)
-apiRouter.delete('/groups/id', apiController.deleteGroup)
+apiRouter.delete('/groups/:id', apiController.deleteGroup)
 
 apiRouter.get('/answers/', apiController.getAnswer)
 apiRouter.get('/answers/:id', apiController.getAnswer)

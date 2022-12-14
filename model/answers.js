@@ -20,7 +20,6 @@ class Answers extends Database
         }
         catch(err)
         {
-            console.log(err)
             throw "Internal Error";
         }
     }
@@ -38,7 +37,6 @@ class Answers extends Database
         }
         catch(err)
         {
-          console.log(err)
           throw "Internal Error";
         }
       }
@@ -50,7 +48,6 @@ class Answers extends Database
     if(query&&typeof query === "object")
       {
         if(query.exam) {query.examId = new ObjectId(query.examId)}
-        console.log(query)
         try
         {
           let result = await this.collection.find(query).toArray();
@@ -58,7 +55,6 @@ class Answers extends Database
         }
         catch(err)
         {
-          console.log(err)
           throw "Internal Error";
         }
       }

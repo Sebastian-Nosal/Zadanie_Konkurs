@@ -1,7 +1,7 @@
 const { ObjectId } = require('mongodb');
 const Database = require('./database');
 
-class Groups extends Database
+class Exams extends Database
 {
     constructor()
     {
@@ -16,7 +16,6 @@ class Groups extends Database
             try
             {
                 const result = await this.collection.findOne({_id: ObjectId(id)});
-                console.log(result)
                 if(result) return result;
                 else throw "Nothing found";
             }
@@ -34,11 +33,11 @@ class Groups extends Database
         {
             try
             {
-                return await this.collection.find(query).toArray();
+                if(query.author&&query.assigned) return await this.collection.find({$and: [{assignedTo: query.assignedTo}, {author:query.author}]}).toArray();
+                return await this.collection.find({$or: [{assignedTo: query.assignedTo}, {author:query.author}]}).toArray();
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal Error";
             }
         }
@@ -58,7 +57,6 @@ class Groups extends Database
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal problem";
             }
         }
@@ -69,16 +67,17 @@ class Groups extends Database
     {
         if(id)
         {
-        try 
-        {
-            const result = await this.collection.deleteOne({_id: new objectId(id)});
-            if(result.count=== 1) return result;
-            else throw "Invalid ID, nothing deleted"
-        }
-        catch(err)
-        {
-        throw "InternalError"
-        }
+            try 
+            {
+                
+                const result = await this.collection.deleteOne({_id: ObjectId(id)});
+                if(result.deletedCount=== 1) return result;
+                else throw "Invalid ID, nothing deleted"
+            }
+            catch(err)
+            {
+                throw "InternalError"
+            }
         }
         else throw "Missing argument ID"
     }
@@ -87,17 +86,16 @@ class Groups extends Database
     {
         if(update&&id)
         {
-            
             try
             {
-                let result1="nothing pushed", result2 = "nothing pulled";
+                let result1="nothing pushed", result2 = "nothing pulled", result3 = 'nothing changed';
                 if(update.$push) result1 = await this.collection.updateOne({_id: ObjectId(id)}, {$push: update.$push});
                 if(update.$pull) result2 = await this.collection.updateOne({_id: ObjectId(id)}, {$pull: {questions: {$in: update.$pull.members}}});
-                return JSON.stringify(result1) + JSON.stringify(result2);
+                if(update.active||update.active===false) result3 = await this.collection.updateOne({_id: ObjectId(id)}, {$set: {active: update.active}})
+                return JSON.stringify(result1) + JSON.stringify(result2) + JSON.stringify(result3);
             }
             catch(err)
             {
-                console.log(err);
                 throw "Internal error";
             }
         }
@@ -105,4 +103,4 @@ class Groups extends Database
     }
 }
 
-module.exports = new Groups();
+module.exports = new Exams();

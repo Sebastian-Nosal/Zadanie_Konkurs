@@ -1,35 +1,38 @@
-/* eslint-disable no-trailing-spaces */
-/* eslint-disable class-methods-use-this */
-/* eslint-disable linebreak-style */
-
 const {emailSchema, passwordSchema, hash} = require("../config");
 const userModel = require('../model/users');
 const apiController = require('./api_controller');
 
-const controller =  {
-  
+class Controller   
+{
+  constructor()
+  {
+    this.handleLogin = this.handleLogin.bind(this);
+    this.handleRegister = this.handleRegister.bind(this);
+    this.renderLoginPage = this.renderLoginPage.bind(this);
+    this.renderMainPage = this.renderMainPage.bind(this);
+    this.renderRegisterPage = this.renderRegisterPage.bind(this);
+  }
 
-  renderMainPage: function(req, res) {
-    console.log(req.session)
+  renderMainPage(req, res) {
     if (typeof req.session.account !== 'undefined') {
       if (req.session.account.type === 'student') res.render('student');
       else if(req.session.account.type==='teacher')res.render('teacher');
       else res.render('index', { title: 'Main Page' })
     } 
-    else res.render('index', { title: 'Main Page' });
-  },
+    else res.redirect('/login');
+  }
 
-  renderLoginPage: function(req, res) {
+  renderLoginPage(req, res) {
     if (req.session.account) res.redirect('/');
     else res.render('login', { loginStatus: null });
-  },
+  }
 
-  renderRegisterPage: function (req, res) {
+  renderRegisterPage(req, res) {
     if (req.session.account) res.redirect('/');
     else res.render('register');
-  },
+  }
 
- handleLogin: async function(req, res) {
+ async handleLogin(req, res) {
     if (req.body.username && req.body.password) {
       const {username, password} = req.body;
       if(passwordSchema.validate(password)&&emailSchema.validate(username))
@@ -39,13 +42,13 @@ const controller =  {
         {
           if(userModel.checkCredentials(username,hashedPassword)) 
           {
-            const type = await userModel.getUserByUsername(username);
+            const {type} = await userModel.getUserByUsername(username);
             if(type) 
             {
-              req.session.account = {username: username, type: type.type }
+              req.session.cookie.maxAge = 3600000;
+              req.session.account = {username: username, type: type }
               const token = await apiController.auth(username,type);
-              //console.log(token)
-              res.cookie('token', token);
+              res.cookie('token', token, {sameSite: true});
               res.redirect('/');
             }
             else
@@ -60,7 +63,7 @@ const controller =  {
       else res.status(400).send('Invalid credentials');
     } 
     else res.status(400).send('Missing data')
-  },
+  }
 
   async handleRegister(req, res) {
     const {username, password, type} = req.body;
@@ -85,4 +88,4 @@ const controller =  {
   }
 }
 
-module.exports = controller;
+module.exports = Controller.prototype;
