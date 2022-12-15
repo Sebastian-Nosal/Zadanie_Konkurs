@@ -1,0 +1,56 @@
+header
+{
+    height: 75px;
+    
+    .menu
+    {
+        display: none;
+    }
+
+    nav
+    {
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: auto;
+        margin-bottom: auto;
+        position: static;
+        height: 100%;
+        box-sizing: border-box;
+        top: 0vh;
+        width: 780px;
+        padding: 0px;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        flex-direction: row;
+
+        button
+        {
+            border: 0px;
+            border-bottom: 5px white solid;
+            width: 250px;
+            font-size: 22px;
+            height: 100%;
+            background-color: white;
+            box-sizing: border-box;
+            max-height: 74px;
+            font-weight: bold;
+        }
+
+        button:hover
+        {
+            border-bottom: 5px orange solid;
+            font-size: 23px;
+            font-weight: bold;
+            color: orange;
+            transition: font-size 1s, border-bottom 1s;
+        }
+    
+        .selected
+        {
+            border-bottom: 5px orange solid;
+            font-size: 24px;
+            color: orange;
+        }
+    }
+}

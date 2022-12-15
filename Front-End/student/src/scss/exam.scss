@@ -1,0 +1,213 @@
+.Container
+{
+    .Container__column--side
+    {
+        width: 100%;
+
+        .Questions-Container
+        {
+            background-color: rgba(white, 0.4);
+            border: 1px solid white;
+            height: 120px;
+            margin: 40px;
+            margin-left: 30px;
+            padding: 0px;
+            border-radius: 30px;
+            
+
+            ul
+            {
+                overflow-x: scroll;
+                list-style-type: none;
+                box-sizing: border-box;
+                height: 103px;
+                scroll-behavior: smooth;
+                scrollbar-width: thin;
+                width: calc(100% - 50px);
+                margin-bottom: 5px;
+                margin-left: auto;
+                margin-right: auto;
+                margin-bottom: auto;
+                padding: 0;
+                height: 92%;
+                
+
+                li
+                {
+                    margin: 0;
+                    button
+                    {
+                        writing-mode: vertical-rl;
+                        float: left;
+                        padding: 5px;
+                        box-sizing: border-box;
+                        width: 10%;
+                        border: 1px solid white;
+                        border-radius: 10px;
+                        background-color: rgba(white, 0.4);
+                        margin: 5px;
+
+                        span
+                        {
+                            margin-bottom: -20px;
+                            writing-mode: vertical-lr;
+                            position: relative;
+                            z-index: -2;
+                        }
+                        svg
+                        {
+                            display: none;
+                        }
+        
+                    }
+
+                    .clicked
+                    {
+                        background-color: rgba(aqua, 0.3);
+                    }
+                }
+            }
+        }
+    }
+    
+    aside
+    {
+        display: block;
+        
+        .Controlls-Container
+        {
+            background-color: rgba(#303030, 0.5);
+            width: 90vw;
+            max-width: 720px;
+            height: 70px;
+            box-sizing: border-box;
+            margin: 50px auto;
+            padding: 15px;
+            border: 1px solid black;
+            border-radius: 50px;
+            display: flex;
+            justify-content: space-evenly;
+
+            button
+            {
+                height: 40px;
+                width: 40px;
+                display: block;
+                border-radius: 20px;
+                border: 3px solid lightgreen;
+                color: lightgreen;
+                background-color: rgba(#303030, 0.2);
+                text-align: center;
+                line-height: 0px;
+                font-weight: bolder;
+
+
+            }
+
+            button:first-child()
+            {
+                font-size: 40px;
+            }
+
+            button:hover
+            {
+                transform: scale(1.2);
+                transition: transform 0.7s;
+            }
+
+        }
+        
+    }
+}
+
+@media screen and (min-width: 1025px)
+{
+    .Container
+    {
+        &__column
+        {
+            width: 10%;
+            display: flex;
+            float: left;
+            height: 70vh;
+            //background-color: aqua;
+            width: 720px;
+        }
+
+        .Container__column--side
+        {
+            width: calc(50vw - 370px);
+            display: block;
+            float: left;
+            //background-color: red;
+            height: 70vh;
+
+            flex-direction: row;
+            .Questions-Container
+            {
+                float: left;
+                min-width: 120px;
+                width: 60%;
+                max-width: 240px;
+                height: 60vh;
+                margin-left: 30px;
+                margin-top: 0px;
+                padding: 10px;
+                border-radius: 30px;
+                
+                ul
+                {
+                    overflow-y: scroll;
+                    overflow-x: auto;
+                    text-align: justify;
+                    width: 100%;
+                    li
+                    {
+                        float: bottom;
+
+                        button 
+                        {
+                            width: 90%;
+                            height: 30px;
+                            display: flex;
+                            justify-content: space-around;
+                            span
+                            {
+                                writing-mode: horizontal-tb;
+                                display: block;
+                                float: left;
+                            }
+
+                            svg
+                            {
+                                display: block;
+                                float: left;
+                            }
+                        }
+
+                        .selected
+                        {
+                            background-color: rgba(aquamarine, 0.3);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        aside
+        {
+            .Controlls-Container
+            {
+                height: 60vh;
+                width: 70px;
+                display: flex;
+                flex-direction: column;
+                margin-bottom: auto;
+                margin-top: auto;
+
+            }
+            
+        }
+    }
+}

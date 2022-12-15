@@ -1,0 +1,148 @@
+.app
+{
+    width: 90vw;
+    max-width: 720px;
+    min-height: 60vh;
+    box-sizing: border-box;
+    padding: 15px 25px;
+    border: 1px solid white;
+    border-radius: 15px;
+    background-color: rgba(white, 0.4);
+    margin: 0 auto;
+    backdrop-filter: blur(2px);
+    height: fit-content;
+    padding-bottom:  10px;
+    margin-top: auto;
+    margin-bottom: auto;
+
+    h1
+    {
+        text-align: center;
+        font-family: 'Courier New', Courier, monospace;
+        font-size: 46px;
+        margin-bottom: 3vh;
+    }
+
+    img
+    {
+        height: 25vh;
+        width: 90%;
+        margin: 0 auto;
+        text-align: center;
+        display: flex;
+    }
+
+    p
+    {
+        font-size: 32px;
+        margin: 20px 40px ;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    }
+
+    span
+    {
+        font-size: 24px;
+        margin-left: 40px;
+        margin-top: 7px;
+        font-family: 'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;   
+        display: block;
+    }
+
+
+    .app-buttons-container
+    {
+        display: flex;
+        width: 80%;
+        max-width: 450px;
+        justify-content: space-between;
+        margin-left: auto;
+        margin-right: auto;
+        margin-top: 50px;
+        margin-bottom: 40px;
+
+        &__Button
+        {
+            height: 3.5rem;
+            width: 3.5rem;
+            max-height: 70px;
+            max-width: 70px;
+            min-width: 40px;
+            min-height: 40px;
+            box-sizing: border-box;
+            padding: 10px;
+            border-radius: 50% ;
+            background-color: rgba($color: #303030, $alpha: 0.4);
+            color: white;
+            font-size: 2.4rem;
+            line-height: 2rem;
+            font-weight: bolder;
+            box-shadow: 0px 0px 10px 2px white;
+            border: 1px;
+            cursor: pointer;
+        }
+
+        &__Button:hover
+        {
+            font-size: 3.8rem;
+        }
+
+        &__Button:first-child:hover
+        {
+            color: #44aaFF;
+            text-shadow: 0px 0px 2px #44aaff;
+            box-shadow: 0px 0px 10px 5px #44aaff;
+            transition: text-shadow 0.7s, box-shadow 0.7s;
+        }
+
+        &__Button:nth-child(2):hover
+        {
+            color: #FFFF00;
+            text-shadow: 0px 0px 2px #FFFF00;
+            box-shadow: 0px 0px 10px 5px #FFFF00;
+            transition: text-shadow 0.7s, box-shadow 0.7s;
+        }
+
+        &__Button:nth-child(3):hover
+        {
+            color: #FF00FF;
+            text-shadow: 0px 0px 2px #FF00FF;
+            box-shadow: 0px 0px 10px 5px #FF00FF;
+            transition: text-shadow 0.7s, box-shadow 0.7s;
+        }
+
+        &__Button:nth-child(4):hover
+        {
+            color: #FFAA00;
+            text-shadow: 0px 0px 2px #FFAA00;
+            box-shadow: 0px 0px 10px 5px #FFAA00;
+            transition: text-shadow 0.7s, box-shadow 0.7s;
+        }
+
+        .clicked
+        {
+            color: #0af7b0;
+            text-shadow: 0px 0px 2px #0af7b0;
+            box-shadow: 0px 0px 10px 5px #0af7b0;
+            transition: text-shadow 0.7s, box-shadow 0.7s;
+            
+        }
+
+    }
+}
+
+@media screen and (min-width: 1024px) {
+    .app
+    {
+        .app-buttons-container
+        {
+
+            &__Button
+            {
+                width: 5rem;
+                height: 5rem;
+                font-size: 3rem;
+            }
+
+        }
+    }
+}
