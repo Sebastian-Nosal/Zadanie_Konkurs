@@ -7,8 +7,9 @@ const controller = require('../controller/controller');
 router.get('/', controller.renderMainPage);
 router.get('/login', controller.renderLoginPage);
 router.get('/register', controller.renderRegisterPage);
+router.get('/logout',(req,res)=>res.send("Koza"))
 
 router.post('/login', controller.handleLogin);
 router.post('/register', controller.handleRegister);
-router.post('/logout', controller.handleLogOut)
+router.post('/logout', controller.handleLogOut);
 module.exports = router;

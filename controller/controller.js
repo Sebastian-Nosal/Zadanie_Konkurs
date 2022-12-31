@@ -2,7 +2,7 @@ const {emailSchema, passwordSchema, hash} = require("../config");
 const userModel = require('../model/users');
 const apiController = require('./api_controller');
 
-class Controller   
+class Controller
 {
   constructor()
   {
@@ -11,15 +11,16 @@ class Controller
     this.renderLoginPage = this.renderLoginPage.bind(this);
     this.renderMainPage = this.renderMainPage.bind(this);
     this.renderRegisterPage = this.renderRegisterPage.bind(this);
+    this.handleLogOut = this.handleLogOut.bind(this);
   }
 
   renderMainPage(req, res) {
     console.log(req.session)
-    if (typeof req.session.account !== 'undefined') {
+    if (req.session.account !== undefined) {
       if (req.session.account.type === 'student') res.render('student');
       else if(req.session.account.type==='teacher')res.render('teacher');
       else res.render('index', { title: 'Main Page' })
-    } 
+    }
     else res.redirect('/login');
   }
 
@@ -34,8 +35,11 @@ class Controller
   }
 
   handleLogOut(req,res){
-    if(req.session) req.session = undefined;
-    res.redirect('/login')
+    console.log('function called')
+    req.session.destroy();
+    res.send(200)
+    console.log('session deleted');
+    console.log(req.session)
   }
 
  async handleLogin(req, res) {
@@ -46,10 +50,10 @@ class Controller
         const hashedPassword = hash(password);
         if(userModel.checkIfUserIsInDb(username))
         {
-          if(userModel.checkCredentials(username,hashedPassword)) 
+          if(userModel.checkCredentials(username,hashedPassword))
           {
             const {type} = await userModel.getUserByUsername(username);
-            if(type) 
+            if(type)
             {
               req.session.cookie.maxAge = 3600000;
               req.session.account = {username: username, type: type }
@@ -59,7 +63,7 @@ class Controller
               res.redirect('/');
             }
             else
-            { 
+            {
               res.status(500).send('Internal problem with database. Please try to log in again later')
             }
           }
@@ -68,7 +72,7 @@ class Controller
         else res.status(400).send('Not such user in database. Register first')
       }
       else res.status(400).send('Invalid credentials');
-    } 
+    }
     else res.status(400).send('Missing data')
   }
 
@@ -84,7 +88,7 @@ class Controller
           if(await userModel.insertUser(username,hashedPassword,type))
           {
             res.status(201).redirect('/login');
-          } 
+          }
           else res.status(500).send('Problem with database');
         }
         else res.status(400).send('user Already Exist');
@@ -95,4 +99,4 @@ class Controller
   }
 }
 
-module.exports = Controller.prototype;
+module.exports = new Controller;
