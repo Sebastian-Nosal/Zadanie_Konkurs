@@ -14,6 +14,7 @@ class Controller
   }
 
   renderMainPage(req, res) {
+    console.log(req.session)
     if (typeof req.session.account !== 'undefined') {
       if (req.session.account.type === 'student') res.render('student');
       else if(req.session.account.type==='teacher')res.render('teacher');
@@ -32,6 +33,11 @@ class Controller
     else res.render('register');
   }
 
+  handleLogOut(req,res){
+    if(req.session) req.session = undefined;
+    res.redirect('/login')
+  }
+
  async handleLogin(req, res) {
     if (req.body.username && req.body.password) {
       const {username, password} = req.body;
@@ -48,7 +54,8 @@ class Controller
               req.session.cookie.maxAge = 3600000;
               req.session.account = {username: username, type: type }
               const token = await apiController.auth(username,type);
-              res.cookie('token', token, {sameSite: true});
+              //console.log(token)
+              res.cookie('token', token);
               res.redirect('/');
             }
             else

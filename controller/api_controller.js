@@ -329,7 +329,6 @@ class apiController
                     } 
                     else problems.push('Invalid or missing answers.')
                     
-                    content = content.map(el=>el.trim())
                 }
                 catch(err)
                 {
